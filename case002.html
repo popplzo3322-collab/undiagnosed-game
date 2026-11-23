@@ -6,7 +6,7 @@
 엄마도 제 얘기를 안 믿어요.”</div><div class="speaker">보호자 · 어머니</div><div class="story">“원래 이렇지 않은 애예요. 몇 주 전부터 목이 답답하다고 해서 갑상선에 문제가 있는 줄 알았어요.
 그런데 잠을 거의 안 자고, 혼자서 누군가와 말하는 것처럼 굴더니 어제는 저를 못 알아보는 것 같았어요.
 정신과에서 치료를 받아야 한다는 얘기를 들었는데… 정말 마음의 문제일까요?”</div><p><b>초진 기록</b> · 체온 36.7°C · 혈압 118/74 · 심박수 98 · 호흡수 18 · SpO₂ 98%. 현재 대화 가능하지만 주의집중이 불안정합니다.</p><p class="muted">이 사건의 모든 인물·검사 수치·경과는 허구이며, 추리를 위한 게임 자료입니다.</p><button id="start">진료 시작 →</button></div></section>
-<main class="wrap"><header><div><small>UNDIAGNOSED · 미확진 · CASE 002 v0.5</small><h1>그녀가 변하기 시작했다</h1><small>4턴 × 4 AP · 문진 1 AP / 검사·치료 2 AP</small></div><div><a href="./">CASE 001</a> <button id="reset">처음부터</button></div></header>
+<main class="wrap"><header><div><small>UNDIAGNOSED · 미확진 · CASE 002 v0.6</small><h1>그녀가 변하기 시작했다</h1><small>4턴 × 4 AP · 문진 1 AP / 검사·치료 2 AP</small></div><div><a href="./">CASE 001</a> <button id="reset">처음부터</button></div></header>
 <div class="stats"><div><small>진료 턴</small><b id="turn"></b></div><div><small>남은 AP</small><b id="ap"></b></div><div><small>검사 횟수</small><b id="count"></b></div><div><small>상태</small><b id="status" style="font-size:15px"></b></div></div>
 <div class="grid"><section class="panel"><small id="statecode"></small><h2 id="statetitle"></h2><div class="quote" id="speech"></div><div class="vitals" id="vitals"></div><p class="muted" id="statehint"></p><h3 style="font-size:14px">치료 기록</h3><div id="flags"></div><div class="foot"><small>검사 결과는 직접 선택해야 공개됩니다.</small><button id="next">턴 종료 →</button></div></section>
 <section class="panel"><h2>행동 선택</h2><div class="tabs" id="tabs"></div><div class="actionlist" id="actions"></div><h2 style="margin-top:20px">진행 결과</h2><div class="journal" id="journal"></div></section>
@@ -35,15 +35,15 @@ function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&am
 function log(title,body){g.logs.unshift({turn:g.turn,title:title,body:body})}
 function reset(){g={turn:1,ap:4,count:0,h:new Set(),x:new Set(),t:new Set(),logs:[],steroid:0,ivig:0,ritux:0,surg:0,psych:0,antiviral:0,support:0,tumor:false,antibody:0,antibodyResult:false,ended:false};tab="history";book="활력징후";e("intro").classList.remove("hidden");e("ending").classList.add("hidden");e("memo").value="";log("접수","보호자 동행으로 내원했습니다. 정신과적 질환이 의심되어 평가 중입니다.");render()}
 function state(){if(g.turn===1)return ["S1 · 초기 평가","달라진 일상","“저 괜찮아요. 그런데 누가 자꾸 저를 지켜보고 있는 것 같아요….”\n\n환자가 말을 잇지 못하고 불안하게 주변을 살핍니다.","36.7°C","118/74","98","18","98%"];
-if(g.turn===2)return ["S2 · 상태 변화","이상한 움직임","간호사가 입 주변의 반복적인 움직임과 짧은 멍한 상태를 보고합니다.\n\n보호자: “계속 같은 질문만 해요. 왜 이러는지 모르겠어요.”","37.0°C","114/72","108","21","97%"];
-if(g.turn===3)return g.steroid?["S3-B · 치료 후 관찰","변화가 멈춘 듯하지만","환자는 이전보다 덜 흥분하지만 질문에 대한 반응은 느립니다. 손의 반복적인 움직임은 계속됩니다.","37.1°C","110/70","105","22","97%"]:["S3-A · 상태 악화","흐려지는 대답","환자가 어머니를 바라보다 이름을 묻습니다. 질문에 대답하지 못하는 순간이 늘고, 몸의 반복적인 움직임이 관찰됩니다.","37.2°C","108/68","116","24","96%"];
+if(g.turn===2)return ["S2 · 돌발 행동","갑작스러운 격앙","환자가 대화 도중 갑자기 자리에서 일어납니다.\n\n“건드리지 마세요! 저한테 왜 이래요!”\n\n환자는 탁자 위 물건을 바닥으로 밀어 떨어뜨리고, 가까이 있던 물건을 집어 던지려 합니다. 의료진이 주변의 위험한 물건을 치우고 거리를 확보합니다. 잠시 뒤 환자는 멍한 표정으로 주위를 둘러봅니다.\n\n보호자: “조금 전까지 조용했는데… 갑자기 왜 저러는 거죠?”","37.0°C","114/72","112","22","97%"];
+if(g.turn===3)return g.steroid?["S3-B · 치료 후 관찰","달라지는 반응","환자는 잠시 안정을 보이지만 질문에 대한 반응은 느립니다. 입술과 손을 반복적으로 움직입니다.\n\n보호자: “어제 갑자기 물건을 던지려 했던 것도 기억을 못 하는 것 같아요.”","37.1°C","110/70","105","22","97%"]:["S3-A · 상태 악화","흐려지는 대답","환자가 어머니를 바라보다 이름을 묻습니다. 질문에 대답하지 못하는 순간이 늘고, 입술과 손의 반복적인 움직임이 관찰됩니다.\n\n보호자: “갑자기 물건을 집어 던지려 하더니, 조금 뒤에는 무슨 일이 있었는지 묻더라고요.”","37.2°C","108/68","116","24","96%"];
 return g.steroid&&g.ivig&&g.surg?["S4-C · 회복의 시작","다시 부르는 이름","환자가 어머니에게 고개를 돌립니다.\n\n“엄마… 나 얼마나 오래 아팠어?”\n\n아직 회복과 재활이 필요합니다.","36.8°C","116/72","92","18","98%"]:g.steroid?["S4-B · 경과 관찰","아직 끝나지 않은 치료","환자는 여전히 기억과 행동의 변동을 보입니다. 가족은 회복에 시간이 필요하다는 설명을 듣습니다.","37.0°C","112/72","106","21","97%"]:["S4-A · 중증 변화","깊어지는 혼돈","환자는 문장으로 대답하지 못합니다. 반복적인 움직임과 불규칙한 호흡이 관찰되어 집중 관찰이 진행됩니다.","37.1°C","102/64","128","26","94%"]}
 function can(cost,test){return !g.ended&&g.ap>=cost&&(!test||g.count<2)}
 function hist(i){if(!can(1,false)||g.h.has(i))return;g.ap--;g.h.add(i);log("H-"+String(i+1).padStart(2,"0")+" · "+H[i][0],"의료진: "+H[i][1]+"\n\n"+(g.turn>=3?"보호자 진술 — ":"")+H[i][2]);render()}
 function test(i){if(!can(2,true)||g.x.has(i)&&i===7)return;g.ap-=2;g.count++;g.x.add(i);let val=X[i][1];if(i===7){g.antibody=g.turn}if(i===8||i===9||i===11)g.tumor=true;log("검사 · "+X[i][0],val);render()}
 function tx(i){if(!can(2,false))return;if(i===6&&!g.tumor)return;if(i===4&&!g.steroid)return;if(i===6&&g.surg)return;g.ap-=2;g.t.add(i);let text="";
 switch(i){
-case 0:g.psych=g.turn;text="환자는 잠시 진정되지만 기억과 행동의 변화는 계속 관찰됩니다.";break;
+case 0:g.psych=g.turn;text="의료진이 주변 위험 물품을 치우고 자극을 줄인 환경에서 환자의 안전을 확보합니다. 증상 조절 이후 환자는 잠시 진정되지만, 기억과 행동의 변화는 계속 관찰됩니다.";break;
 case 1:g.antiviral=g.turn;text="항바이러스 치료가 시작되었습니다. 상태 변화는 이후 경과에서 확인합니다.";break;
 case 2:if(!g.steroid)g.steroid=g.turn;text="면역조절 치료가 시작되었습니다. 현재로서는 호전 여부를 단정하기 어렵습니다.";break;
 case 3:if(!g.ivig)g.ivig=g.turn;text="정맥 면역글로불린 투여가 시작되었습니다. 지속적인 경과 관찰이 필요합니다.";break;
