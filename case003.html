@@ -33,12 +33,12 @@ main{max-width:1180px;margin:auto;padding:22px 18px 60px}header{display:flex;jus
 <p><strong>당신의 첫 번째 판단은 진단명을 맞히는 일이 아닙니다. 이 환자가 지금 안전하게 숨 쉬고, 혈액이 순환하고 있는지 확인하는 일입니다.</strong></p>
 <div class="flex"><span class="help">가상의 의료 추리 게임 · 실제 임상 판단용 아님</span><button id="start" class="btn primary">환자 인계받기 →</button></div>
 </article></div></section>
-<main><header><div><div class="kicker">UNDIAGNOSED · CASE 003 · v0.2</div><h1>마지막 산책</h1><div class="help">말하지 못하는 환자와 동물병원에서 들어오는 두 번째 기록</div></div><div class="flex"><a href="./" class="btn">전체 사건 선택</a><button class="btn" id="reset">처음부터</button></div></header>
-<div class="stats"><div class="stat"><small>진행</small><strong id="turn">1 / 4</strong></div><div class="stat"><small>남은 행동력</small><strong id="ap">4 AP</strong></div><div class="stat"><small>이번 턴 검사</small><strong id="count">0 / 2</strong></div><div class="stat"><small>환자 상태</small><strong id="status" style="font-size:16px">초기 평가</strong></div></div>
+<main><header><div><div class="kicker">UNDIAGNOSED · CASE 003 · v0.3</div><h1>마지막 산책</h1><div class="help">말하지 못하는 환자와 동물병원에서 들어오는 두 번째 기록</div></div><div class="flex"><a href="./" class="btn">전체 사건 선택</a><button class="btn" id="reset">처음부터</button></div></header>
+<div class="stats"><div class="stat"><small>진행</small><strong id="turn">1 / 4</strong></div><div class="stat"><small>남은 행동력</small><strong id="ap">6 AP</strong></div><div class="stat"><small>이번 턴 검사</small><strong id="count">0 / 2</strong></div><div class="stat"><small>환자 상태</small><strong id="status" style="font-size:16px">초기 평가</strong></div></div>
 <div class="layout">
 <section class="panel"><div class="kicker" id="statecode">S1 · 초기 평가</div><h2 id="statetitle">응답 없는 환자</h2><div id="speech" class="note"></div><div class="vitals" id="vitals"></div><p class="help">응급 안정화에 필수적인 초기 확인은 무료로 이루어집니다. 선택적 문진·검사·치료에 AP가 사용됩니다.</p></section>
 <section class="panel"><div class="kicker">두 번째 기록 · 동물병원</div><h2 id="dogtitle">구조된 강아지</h2><div id="dogtext" class="note dog"></div><p class="help">강아지에 대한 검사와 처치는 동물병원 의료진이 진행합니다. 플레이어는 연락·기록 요청으로 정보를 얻습니다.</p></section>
-<section class="panel"><h2>진료·조사 선택</h2><div class="tabs" id="tabs"></div><div id="actions" class="actions"></div><div class="flex" style="margin-top:15px"><span class="help">행동력 4 AP · 검사 최대 2회/턴</span><button class="btn primary" id="next">다음 턴 →</button></div></section>
+<section class="panel"><h2>진료·조사 선택</h2><div class="tabs" id="tabs"></div><div id="actions" class="actions"></div><div class="flex" style="margin-top:15px"><span class="help">행동력 6 AP · 검사 최대 2회/턴</span><button class="btn primary" id="next">다음 턴 →</button></div></section>
 <section class="panel"><h2>진료·사건 기록</h2><div id="journal" class="log"></div></section>
 <section class="panel wide"><h2>확인된 단서</h2><div id="evidence" class="help"></div></section>
 <section class="panel wide"><h2>통합 의학 참고서</h2><p class="help">모든 CASE에서 사용할 수 있는 일반 의학 지식입니다. 목차에 있다는 이유만으로 사건의 정답은 아닙니다.</p><div id="books" class="booknav"></div><div class="bookbody" id="book"></div></section>
@@ -90,7 +90,7 @@ let g,tab="history",book="활력징후";
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function log(title,body){g.logs.unshift({turn:g.turn,title,body});}
-function reset(){g={turn:1,ap:4,count:0,h:new Set(),x:new Set(),d:new Set(),t:new Set(),logs:[],pending:[],results:{},ended:false,guess:false,support:false,firstTurns:{h:{},x:{},d:{},t:{}}};tab="history";book="활력징후";$("intro").classList.remove("hidden");$("ending").classList.add("hidden");$("final").classList.add("hidden");$("humanGuess").value="";$("linkGuess").value="";log("구급대 인계","신원 미상의 성인 남성이 의식저하로 이송되었습니다. 초기 기도·호흡·순환 확인과 현장 혈당 측정은 응급 안정화의 일부로 즉시 시행합니다. 혈당 104 mg/dL.");render();}
+function reset(){g={turn:1,ap:6,count:0,h:new Set(),x:new Set(),d:new Set(),t:new Set(),logs:[],pending:[],results:{},ended:false,guess:false,support:false,firstTurns:{h:{},x:{},d:{},t:{}}};tab="history";book="활력징후";$("intro").classList.remove("hidden");$("ending").classList.add("hidden");$("final").classList.add("hidden");$("humanGuess").value="";$("linkGuess").value="";log("구급대 인계","신원 미상의 성인 남성이 의식저하로 이송되었습니다. 초기 기도·호흡·순환 확인과 현장 혈당 측정은 응급 안정화의 일부로 즉시 시행합니다. 혈당 104 mg/dL.");render();}
 function human(){if(g.turn===1)return ["S1 · 초진","대답 없는 환자","환자는 신음소리만 내며 눈을 오래 뜨지 못합니다. 구급대가 반응 저하와 발열을 보고합니다.\\n\\n긴급 기도·호흡·순환 평가와 혈당 측정이 먼저 시행되었습니다.", "39.0°C","94/60","118","23","96%"];
 if(g.turn===2)return ["S2 · 진행","흐려지는 의식",g.support?"수액 및 집중관찰 후 혈압은 다소 안정적이지만 환자는 여전히 혼돈 상태입니다. 반복해서 잠들고 질문에 답하지 못합니다.":"환자는 질문에 반응하지 못하고 눈을 감고 있습니다. 혈압 저하가 지속되어 집중관찰이 필요합니다.","39.2°C",g.support?"105/66":"90/54","122","24","95%"];
 if(g.turn===3)return ["S3 · 경과","설명되지 않은 발열",g.support?"집중치료팀은 활력징후를 계속 관찰합니다. 발열과 의식 변화는 아직 남아 있습니다.":"의식이 더 저하되고 혈역학적 불안정이 지속됩니다. 즉각적인 안정화가 필요한 상태입니다.","38.9°C",g.support?"108/68":"88/52","114","22","96%"];
@@ -109,7 +109,7 @@ if(kind==="t"&&(i===0||i===1||i===3))g.support=true;
 log(code+"-"+String(i+1).padStart(2,"0")+" · "+item[0],item[1]);
 render();}
 function next(){if(g.ended)return;if(g.turn===4){g.ended=true;$("ending").classList.remove("hidden");$("ending").scrollIntoView({behavior:"smooth",block:"start"});render();return;}
-g.turn++;g.ap=4;g.count=0;let arriving=g.pending.filter(o=>o.due<=g.turn);g.pending=g.pending.filter(o=>o.due>g.turn);
+g.turn++;g.ap=6;g.count=0;let arriving=g.pending.filter(o=>o.due<=g.turn);g.pending=g.pending.filter(o=>o.due>g.turn);
 for(const p of arriving){g.results[p.type]=true;
 if(p.type==="sfts")log("전문검사 · 사람 검체","SFTS 바이러스 RT-PCR: 양성. 발열, 혈구감소 및 임상 경과와 함께 해석합니다.");
 if(p.type==="lepto")log("전문검사 · 사람 검체","렙토스피라 PCR 및 현재 혈청학적 평가에서 감염을 뒷받침하는 소견이 확인되지 않았습니다. 검체 시점과 임상 경과를 함께 고려합니다.");
