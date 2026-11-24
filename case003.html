@@ -91,11 +91,11 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function log(title,body){g.logs.unshift({turn:g.turn,title,body});}
 function reset(){g={turn:1,ap:6,count:0,h:new Set(),x:new Set(),d:new Set(),t:new Set(),logs:[],pending:[],results:{},ended:false,guess:false,support:false,humanResponse:null,dogResponse:null,firstTurns:{h:{},x:{},d:{},t:{}}};tab="history";book="활력징후";$("intro").classList.remove("hidden");$("ending").classList.add("hidden");$("final").classList.add("hidden");$("humanGuess").value="";$("linkGuess").value="";log("구급대 인계","신원 미상의 성인 남성이 의식저하로 이송되었습니다. 초기 기도·호흡·순환 확인과 현장 혈당 측정은 응급 안정화의 일부로 즉시 시행합니다. 혈당 104 mg/dL.");render();}
-function human(){if(g.turn===1)return ["S1 · 초진","대답 없는 환자","환자는 신음소리만 내며 눈을 오래 뜨지 못합니다. 구급대가 반응 저하와 발열을 보고합니다.\\n\\n긴급 기도·호흡·순환 평가와 혈당 측정이 먼저 시행되었습니다.", "39.0°C","94/60","118","23","96%"];
+function human(){if(g.turn===1)return ["S1 · 초진","대답 없는 환자","환자는 신음소리만 내며 눈을 오래 뜨지 못합니다. 구급대가 반응 저하와 발열을 보고합니다.\n\n긴급 기도·호흡·순환 평가와 혈당 측정이 먼저 시행되었습니다.", "39.0°C","94/60","118","23","96%"];
 if(g.turn===2)return ["S2 · 진행","흐려지는 의식",(g.firstTurns.t[1]&&g.firstTurns.t[1]<g.turn)?"수액 및 집중관찰 후 혈압은 다소 안정적이지만 환자는 여전히 혼돈 상태입니다. 반복해서 잠들고 질문에 답하지 못합니다.":"환자는 질문에 반응하지 못하고 눈을 감고 있습니다. 혈압 저하가 지속되어 집중관찰이 필요합니다.","39.2°C",(g.firstTurns.t[1]&&g.firstTurns.t[1]<g.turn)?"105/66":"90/54","122","24","95%"];
 if(g.turn===3)return ["S3 · 경과","설명되지 않은 발열",(g.firstTurns.t[1]&&g.firstTurns.t[1]<g.turn)?"수액과 집중관찰 후 혈압은 일부 회복되었으나 발열과 의식 변화는 아직 남아 있습니다.":"의식이 더 저하되고 혈역학적 불안정이 지속됩니다. 즉각적인 안정화가 필요한 상태입니다.","38.9°C",(g.firstTurns.t[1]&&g.firstTurns.t[1]<g.turn)?"108/68":"88/52","114","22","96%"];
 return ["S4 · 재평가","최종 판단의 시간",(g.firstTurns.t[1]&&g.firstTurns.t[1]<g.turn)?"보존적 치료와 관찰이 계속됩니다. 의식이 조금씩 변동하지만, 정확한 원인과 경과에 대한 판단이 필요합니다.":"의식저하와 전신 상태 악화가 지속됩니다. 늦지 않게 집중 치료를 이어가야 합니다.","38.4°C",(g.firstTurns.t[1]&&g.firstTurns.t[1]<g.turn)?"110/70":"92/58","108","21","97%"];}
-function dogState(){if(g.turn===1)return ["강아지 · 초기 보고","수의사가 첫 진찰을 진행 중입니다. 구토와 탈수가 관찰되었습니다.\\n\\n병원 직원: '강아지 역시 상태가 좋지 않습니다.'"];
+function dogState(){if(g.turn===1)return ["강아지 · 초기 보고","수의사가 첫 진찰을 진행 중입니다. 구토와 탈수가 관찰되었습니다.\n\n병원 직원: '강아지 역시 상태가 좋지 않습니다.'"];
 if(g.results.doglepto)return ["강아지 · 전문 검사 도착","동물병원에서 감염병 검사 결과가 전달되었습니다. 자세한 내용은 사건 기록을 확인하십시오."+((g.firstTurns.d[6]&&g.firstTurns.d[6]<g.turn)?"\n\n치료 경과: 수의사는 신기능과 소변량을 계속 관찰하고 있습니다. 구토는 다소 줄었으나 아직 회복을 단정할 수 없습니다.":"")];
 if(g.firstTurns.d[6]&&g.firstTurns.d[6]<g.turn)return ["강아지 · 치료 경과","동물병원에서 수액·항생제 치료와 신기능 감시가 이어지고 있습니다. 구토는 다소 줄었지만 여전히 기력이 없고 예후를 지켜봐야 합니다."];
 return ["강아지 · 진료 중","강아지는 동물병원에서 수액과 진찰을 받고 있습니다. 검사 결과를 요청하면 새로운 자료를 받을 수 있습니다."];}
