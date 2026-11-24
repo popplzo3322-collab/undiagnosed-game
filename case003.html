@@ -90,13 +90,14 @@ let g,tab="history",book="활력징후";
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function log(title,body){g.logs.unshift({turn:g.turn,title,body});}
-function reset(){g={turn:1,ap:6,count:0,h:new Set(),x:new Set(),d:new Set(),t:new Set(),logs:[],pending:[],results:{},ended:false,guess:false,support:false,firstTurns:{h:{},x:{},d:{},t:{}}};tab="history";book="활력징후";$("intro").classList.remove("hidden");$("ending").classList.add("hidden");$("final").classList.add("hidden");$("humanGuess").value="";$("linkGuess").value="";log("구급대 인계","신원 미상의 성인 남성이 의식저하로 이송되었습니다. 초기 기도·호흡·순환 확인과 현장 혈당 측정은 응급 안정화의 일부로 즉시 시행합니다. 혈당 104 mg/dL.");render();}
+function reset(){g={turn:1,ap:6,count:0,h:new Set(),x:new Set(),d:new Set(),t:new Set(),logs:[],pending:[],results:{},ended:false,guess:false,support:false,humanResponse:null,dogResponse:null,firstTurns:{h:{},x:{},d:{},t:{}}};tab="history";book="활력징후";$("intro").classList.remove("hidden");$("ending").classList.add("hidden");$("final").classList.add("hidden");$("humanGuess").value="";$("linkGuess").value="";log("구급대 인계","신원 미상의 성인 남성이 의식저하로 이송되었습니다. 초기 기도·호흡·순환 확인과 현장 혈당 측정은 응급 안정화의 일부로 즉시 시행합니다. 혈당 104 mg/dL.");render();}
 function human(){if(g.turn===1)return ["S1 · 초진","대답 없는 환자","환자는 신음소리만 내며 눈을 오래 뜨지 못합니다. 구급대가 반응 저하와 발열을 보고합니다.\\n\\n긴급 기도·호흡·순환 평가와 혈당 측정이 먼저 시행되었습니다.", "39.0°C","94/60","118","23","96%"];
-if(g.turn===2)return ["S2 · 진행","흐려지는 의식",g.support?"수액 및 집중관찰 후 혈압은 다소 안정적이지만 환자는 여전히 혼돈 상태입니다. 반복해서 잠들고 질문에 답하지 못합니다.":"환자는 질문에 반응하지 못하고 눈을 감고 있습니다. 혈압 저하가 지속되어 집중관찰이 필요합니다.","39.2°C",g.support?"105/66":"90/54","122","24","95%"];
-if(g.turn===3)return ["S3 · 경과","설명되지 않은 발열",g.support?"집중치료팀은 활력징후를 계속 관찰합니다. 발열과 의식 변화는 아직 남아 있습니다.":"의식이 더 저하되고 혈역학적 불안정이 지속됩니다. 즉각적인 안정화가 필요한 상태입니다.","38.9°C",g.support?"108/68":"88/52","114","22","96%"];
-return ["S4 · 재평가","최종 판단의 시간",g.support?"보존적 치료와 관찰이 계속됩니다. 의식이 조금씩 변동하지만, 정확한 원인과 경과에 대한 판단이 필요합니다.":"의식저하와 전신 상태 악화가 지속됩니다. 늦지 않게 집중 치료를 이어가야 합니다.","38.4°C",g.support?"110/70":"92/58","108","21","97%"];}
+if(g.turn===2)return ["S2 · 진행","흐려지는 의식",(g.firstTurns.t[1]&&g.firstTurns.t[1]<g.turn)?"수액 및 집중관찰 후 혈압은 다소 안정적이지만 환자는 여전히 혼돈 상태입니다. 반복해서 잠들고 질문에 답하지 못합니다.":"환자는 질문에 반응하지 못하고 눈을 감고 있습니다. 혈압 저하가 지속되어 집중관찰이 필요합니다.","39.2°C",(g.firstTurns.t[1]&&g.firstTurns.t[1]<g.turn)?"105/66":"90/54","122","24","95%"];
+if(g.turn===3)return ["S3 · 경과","설명되지 않은 발열",(g.firstTurns.t[1]&&g.firstTurns.t[1]<g.turn)?"수액과 집중관찰 후 혈압은 일부 회복되었으나 발열과 의식 변화는 아직 남아 있습니다.":"의식이 더 저하되고 혈역학적 불안정이 지속됩니다. 즉각적인 안정화가 필요한 상태입니다.","38.9°C",(g.firstTurns.t[1]&&g.firstTurns.t[1]<g.turn)?"108/68":"88/52","114","22","96%"];
+return ["S4 · 재평가","최종 판단의 시간",(g.firstTurns.t[1]&&g.firstTurns.t[1]<g.turn)?"보존적 치료와 관찰이 계속됩니다. 의식이 조금씩 변동하지만, 정확한 원인과 경과에 대한 판단이 필요합니다.":"의식저하와 전신 상태 악화가 지속됩니다. 늦지 않게 집중 치료를 이어가야 합니다.","38.4°C",(g.firstTurns.t[1]&&g.firstTurns.t[1]<g.turn)?"110/70":"92/58","108","21","97%"];}
 function dogState(){if(g.turn===1)return ["강아지 · 초기 보고","수의사가 첫 진찰을 진행 중입니다. 구토와 탈수가 관찰되었습니다.\\n\\n병원 직원: '강아지 역시 상태가 좋지 않습니다.'"];
-if(g.results.doglepto)return ["강아지 · 전문 검사 도착","동물병원에서 감염병 검사 결과가 전달되었습니다. 자세한 내용은 사건 기록을 확인하십시오."];
+if(g.results.doglepto)return ["강아지 · 전문 검사 도착","동물병원에서 감염병 검사 결과가 전달되었습니다. 자세한 내용은 사건 기록을 확인하십시오."+((g.firstTurns.d[6]&&g.firstTurns.d[6]<g.turn)?"\n\n치료 경과: 수의사는 신기능과 소변량을 계속 관찰하고 있습니다. 구토는 다소 줄었으나 아직 회복을 단정할 수 없습니다.":"")];
+if(g.firstTurns.d[6]&&g.firstTurns.d[6]<g.turn)return ["강아지 · 치료 경과","동물병원에서 수액·항생제 치료와 신기능 감시가 이어지고 있습니다. 구토는 다소 줄었지만 여전히 기력이 없고 예후를 지켜봐야 합니다."];
 return ["강아지 · 진료 중","강아지는 동물병원에서 수액과 진찰을 받고 있습니다. 검사 결과를 요청하면 새로운 자료를 받을 수 있습니다."];}
 function can(cost,test){return !g.ended&&g.ap>=cost&&(!test||g.count<2);}
 function act(kind,i){const cost=kind==="h"?1:kind==="d"?1:2;if(!can(cost,kind==="x"))return;const set=kind==="h"?g.h:kind==="x"?g.x:kind==="d"?g.d:g.t;if(set.has(i))return;
@@ -106,6 +107,20 @@ let item=kind==="h"?H[i]:kind==="x"?X[i]:kind==="d"?D[i]:T[i];let code=kind==="h
 if(kind==="x"&&item[2]){g.pending.push({type:item[2],due:g.turn+1});}
 if(kind==="d"&&item[2]){g.pending.push({type:item[2],due:g.turn+1});}
 if(kind==="t"&&(i===0||i===1||i===3))g.support=true;
+if(kind==="t"){
+const observations=[
+"기도와 호흡·순환 상태를 다시 확인하고 있습니다. 진료팀이 환자의 변화를 계속 관찰합니다.",
+"수액 투여 후 순환 상태를 재평가합니다. 혈압은 조금 상승했으나 의식저하와 발열은 지속됩니다.",
+"항생제 투여를 시작했습니다. 직후에 발열이나 의식 변화가 사라지지는 않았습니다.",
+"감염내과·중환자팀과 협진하고 있습니다. 원인 확인 전에도 감염관리와 지속적인 생체징후 감시가 이루어집니다.",
+"급성 뇌혈관 사건 가능성을 다시 평가하고 있습니다. 현재 진찰·영상 확인 중이며 상태를 지속 관찰합니다.",
+"동물병원에 연락해 강아지의 입원 및 치료 상황을 확인했습니다. 수의사가 경과를 계속 평가합니다."
+];
+if(i===5){g.dogResponse={turn:g.turn,description:observations[i]};}
+else{g.humanResponse={turn:g.turn,description:observations[i],treatment:i};}
+}
+if(kind==="d"&&i===6){g.dogResponse={turn:g.turn,description:"동물병원 입원과 치료가 연계되었습니다. 수액·항생제 등 치료가 시작되지만, 지금 당장 신장 기능이 정상화되지는 않습니다."};}
+if(kind==="d"&&i===3){g.dogResponse={turn:g.turn,description:"동물병원 담당자는 수액·항생제 치료가 진행 중이라고 전합니다. 구토와 소변량을 반복 확인해야 합니다."};}
 log(code+"-"+String(i+1).padStart(2,"0")+" · "+item[0],item[1]);
 render();}
 function next(){if(g.ended)return;if(g.turn===4){g.ended=true;$("ending").classList.remove("hidden");$("ending").scrollIntoView({behavior:"smooth",block:"start"});render();return;}
@@ -179,7 +194,18 @@ if(tab==="test")X.forEach((o,i)=>a.appendChild(button("검사 · "+o[0],2,"이�
 if(tab==="dog")D.forEach((o,i)=>a.appendChild(button("DOG-"+String(i+1).padStart(2,"0")+" · "+o[0],1,"동물병원 기록 요청 · 1 AP",!can(1,false)||g.d.has(i),()=>act("d",i))));
 if(tab==="therapy")T.forEach((o,i)=>a.appendChild(button(o[0],2,"환자 또는 동물병원 관련 처치·협진",!can(2,false)||g.t.has(i),()=>act("t",i))));}
 function renderBook(){let nav=$("books");nav.innerHTML="";Object.keys(BOOK).forEach(k=>{let b=document.createElement("button");b.textContent=k;b.className=k===book?"on":"";b.onclick=()=>{book=k;renderBook();};nav.appendChild(b)});$("book").textContent=BOOK[book];}
-function render(){let p=human(),d=dogState();$("turn").textContent=g.turn+" / 4";$("ap").textContent=g.ap+" AP";$("count").textContent=g.count+" / 2";$("status").textContent=g.ended?"추리 보고":p[1];$("statecode").textContent=p[0];$("statetitle").textContent=p[1];$("speech").textContent=p[2];$("dogtitle").textContent=d[0];$("dogtext").textContent=d[1];$("vitals").innerHTML=[["체온",p[3]],["혈압",p[4]],["맥박",p[5]+" bpm"],["호흡수",p[6]+"/min"],["SpO₂",p[7]]].map(k=>"<div><small>"+esc(k[0])+"</small><b>"+esc(k[1])+"</b></div>").join("");
+function render(){let p=human(),d=dogState();
+if(g.humanResponse&&g.humanResponse.turn===g.turn){
+p[0]+="-R";p[1]="처치 직후 재평가";p[2]+="\n\n[처치 직후 관찰]\n"+g.humanResponse.description;
+if(g.humanResponse.treatment===1){
+const bp=String(p[4]).split("/").map(Number);p[4]=(bp[0]+8)+"/"+(bp[1]+4);
+p[5]=String(Math.max(85,Number(p[5])-5));
+}
+}
+if(g.dogResponse&&g.dogResponse.turn===g.turn){
+d[0]+=" · 관찰 중";d[1]+="\n\n[수의학적 경과]\n"+g.dogResponse.description;
+}
+$("turn").textContent=g.turn+" / 4";$("ap").textContent=g.ap+" AP";$("count").textContent=g.count+" / 2";$("status").textContent=g.ended?"추리 보고":p[1];$("statecode").textContent=p[0];$("statetitle").textContent=p[1];$("speech").textContent=p[2];$("dogtitle").textContent=d[0];$("dogtext").textContent=d[1];$("vitals").innerHTML=[["체온",p[3]],["혈압",p[4]],["맥박",p[5]+" bpm"],["호흡수",p[6]+"/min"],["SpO₂",p[7]]].map(k=>"<div><small>"+esc(k[0])+"</small><b>"+esc(k[1])+"</b></div>").join("");
 let tags=[...g.h].map(i=>"H-"+String(i+1).padStart(2,"0")).concat([...g.x].map(i=>"검사: "+X[i][0]),[...g.d].map(i=>"DOG-"+String(i+1).padStart(2,"0")),Object.keys(g.results).map(k=>"결과: "+k));$("evidence").innerHTML=tags.length?tags.map(t=>"<span class='tag'>"+esc(t)+"</span>").join(""):"아직 추가 단서가 없습니다.";
 $("journal").innerHTML=g.logs.slice(0,22).map(x=>"<div class='entry'><small>"+esc(x.turn)+"턴 · 사건 기록</small><strong>"+esc(x.title)+"</strong><p>"+esc(x.body)+"</p></div>").join("");
 $("next").disabled=g.ended;$("next").textContent=g.turn===4?"진료 종료 · 추리 보고 →":"턴 종료 →";actions();renderBook();}
