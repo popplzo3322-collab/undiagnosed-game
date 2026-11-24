@@ -128,7 +128,7 @@ const dog=[
 {ok:d[1]!==undefined&&d[1]<=3,label:"강아지의 신장·간 상태 확인"},
 {ok:d[2]!==undefined&&d[2]<=3,label:"강아지 감염병 전문검사 의뢰"}];
 const hScore=human.filter(o=>o.ok).length,dScore=dog.filter(o=>o.ok).length;
-return {human,dog,hScore,dScore,hAlive:hScore>=2,dAlive:dScore>=2};
+return {human,dog,hScore,dScore,hAlive:hScore>=2&&human[0].ok,dAlive:dScore>=2&&dog[0].ok};
 }
 const EPILOGUES={
 both:{
@@ -159,7 +159,7 @@ const ep=EPILOGUES[key];
 const scoreLine=(items)=>items.map(o=>(o.ok?"✓ ":"· ")+o.label).join("\n");
 const text="생존 경과 평가 · 총 "+(sc.hScore+sc.dScore)+" / 6점\n"+
 "환자 대응 "+sc.hScore+" / 3점 · 강아지 대응 "+sc.dScore+" / 3점\n"+
-"※ 각 영역 2점 이상일 때 해당 환자가 생존하는 가상 시나리오 규칙입니다. 실제 의료 예후를 계산하는 점수가 아닙니다.\n\n"+
+"※ 각 영역 2점 이상이며 필수 초기 대응(사람: 수액·지지요법, 강아지: 치료 연계)을 선택해야 생존하는 가상 게임 규칙입니다. 실제 의료 예후를 계산하는 점수가 아닙니다.\n\n"+
 "환자 대응 기록\n"+scoreLine(sc.human)+"\n\n강아지 대응 기록\n"+scoreLine(sc.dog)+"\n\n"+
 "최종 추리 · 사람 진단 "+(rightH?"정답":"오답")+" / 질환 관계 "+(rightL?"정답":"오답")+"\n\n"+
 ep.title+"\n\n"+ep.body+"\n\n"+
