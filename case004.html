@@ -58,14 +58,15 @@ const H=[
 ];
 const X=[
 {title:"일반 ABGA",desc:"산소분압·산염기 상태와 젖산 확인 (기본 패널)",type:"abga",key:"abga"},
-{title:"혈중 COHb 측정 (혈액 CO-oximetry)",desc:"혈액 검체의 일산화탄소헤모글로빈 비율 직접 확인",type:"co",key:"co"},
+{title:"일반 독성물질 선별검사",desc:"혈중 에탄올·일부 약물 및 소변 약물군 확인",type:"tox",key:"tox"},
 {title:"일반혈액검사(CBC)",desc:"백혈구·혈색소·혈소판",type:"cbc",key:"cbc"},
-{title:"전해질·신장기능",desc:"Na·K·Cr 및 혈당",type:"chem",key:"chem"},
+{title:"혈액화학검사 (전해질·신장기능)",desc:"Na·K·Cr·혈당 및 대사 상태 확인",type:"chem",key:"chem"},
 {title:"심전도(ECG)",desc:"심장 리듬·허혈성 변화 확인",type:"ecg",key:"ecg"},
 {title:"심장 트로포닌",desc:"심근 손상 여부 평가",type:"trop",key:"trop"},
 {title:"뇌 CT",desc:"뇌출혈 등 급성 원인 감별",type:"ct",key:"ct"},
 {title:"감염 표지자(CRP)",desc:"염증 수치 확인",type:"crp",key:"crp"},
-{title:"뇌 MRI(DWI)·뇌혈관 MRA",desc:"급성 허혈성 병변 및 주요 뇌혈관 협착·폐색 확인",type:"mra",key:"mra"}
+{title:"뇌 MRI(DWI)·뇌혈관 MRA",desc:"급성 허혈성 병변 및 주요 뇌혈관 협착·폐색 확인",type:"mra",key:"mra"},
+{title:"확장 혈액가스분석 (분획 측정)",desc:"동맥혈가스 외 혈색소 분획 및 관련 지표를 추가 분석",type:"co",key:"co"}
 ];
 const T=[
 ["고농도 산소 투여","비재호흡 마스크 등을 사용한 고농도 산소치료를 즉시 시작하고 환자를 계속 관찰합니다."],
@@ -102,7 +103,8 @@ function actionAllowed(cost,tests){return !g.ended&&g.ap>=cost&&(!tests||g.count
 function history(i){if(!actionAllowed(1,false)||g.h.has(i))return;if(i===3&&!g.h.has(2))return;if(i===6&&!g.h.has(3))return;if(i===10&&!g.h.has(2))return;g.ap--;g.h.add(i);log("H-"+String(i+1).padStart(2,"0")+" · "+H[i][0],H[i][1]);render();}
 function makeReport(type){const values={
 abga:{name:"동맥혈가스분석 · 기본 ABGA",sample:"동맥혈",rows:[["pH","7.33","7.35–7.45","LOW"],["PaO₂",(g.oxygenTurn?"230 mmHg":"95 mmHg"),(g.oxygenTurn?"고농도 산소 투여 중":"실내 공기 기준 80–100 mmHg"),"NORMAL"],["PaCO₂","36 mmHg","35–45 mmHg","NORMAL"],["HCO₃⁻","19 mmol/L","22–26 mmol/L","LOW"],["Lactate","3.8 mmol/L","0.5–2.0 mmol/L","HIGH"]],note:(g.oxygenTurn?"채혈 시점에는 고농도 산소를 투여 중이어서 PaO₂가 상승한 것으로 설정했습니다. ":"")+"기본 ABGA 장비 결과입니다. PaO₂는 혈장에 녹아 있는 산소의 분압을 나타냅니다. 수치만으로 두통과 신경학적 증상의 원인을 확정할 수 없습니다."},
-co:{name:"혈중 일산화탄소헤모글로빈 · CO-oximetry",sample:"정맥혈",rows:[["Carboxyhemoglobin (COHb)",cohbAt(g.turn).toFixed(1)+" %","비흡연자 대체로 0–2 %","HIGH"],["측정 방식","혈액 CO-oximetry","다중파장 측정","METHOD"]],note:"검체 채취 시각과 산소치료 전·후 상태를 함께 해석해야 합니다. COHb 수치는 산소투여 및 노출 종료 후 경과 시간에 따라 감소할 수 있으며, 수치만으로 중증도를 결정하지 않습니다."},
+tox:{name:"일반 독성물질 선별검사 · 약물 및 알코올 패널",sample:"혈액 및 소변",rows:[["혈중 에탄올","< 10 mg/dL","정량한계 미만","NORMAL"],["아세트아미노펜","< 5 µg/mL","검사법 정량한계 미만","NORMAL"],["살리실산염","< 2 mg/dL","검사법 정량한계 미만","NORMAL"],["소변 주요 약물군 면역검사","검사 대상 항목 음성","검사법별 차이 있음","NORMAL"]],note:"이 결과는 열거된 물질에 대한 선별검사 결과입니다. 모든 약물이나 독성 물질에 대한 음성 결과를 뜻하지 않으며, 필요한 경우 별도의 표적 검사를 선택합니다."},
+co:{name:"확장 혈액가스분석 · 혈색소 분획 검사",sample:"정맥혈",rows:[["Carboxyhemoglobin (COHb)",cohbAt(g.turn).toFixed(1)+" %","비흡연자 대체로 0–2 %","HIGH"],["측정 방식","혈액 CO-oximetry","다중파장 측정","METHOD"]],note:"검체 채취 시각과 산소치료 전·후 상태를 함께 해석해야 합니다. COHb 수치는 산소투여 및 노출 종료 후 경과 시간에 따라 감소할 수 있으며, 수치만으로 중증도를 결정하지 않습니다."},
 cbc:{name:"일반혈액검사 · CBC",sample:"정맥혈",rows:[["WBC","7,900 /µL","4,000–11,000","NORMAL"],["Hemoglobin","14.2 g/dL","13–17","NORMAL"],["Platelets","248,000 /µL","150,000–450,000","NORMAL"]],note:"뚜렷한 혈구 감소는 확인되지 않습니다. 원인 질환은 별도 평가가 필요합니다."},
 chem:{name:"일반화학검사",sample:"정맥혈",rows:[["Na","137 mmol/L","135–145","NORMAL"],["K","4.1 mmol/L","3.5–5.0","NORMAL"],["Creatinine","0.9 mg/dL","0.7–1.3","NORMAL"],["Glucose","106 mg/dL","70–140","NORMAL"]],note:"전해질·신기능 검사에서 주요 이상은 관찰되지 않습니다."},
 ecg:{name:"심전도 판독",sample:"12유도 심전도",rows:[["심박수","112 bpm","상황에 따라 해석","HIGH"],["리듬","동성빈맥","규칙적인 동리듬","NOTE"],["ST 분절","뚜렷한 상승 없음","임상 종합","NORMAL"]],note:"동성빈맥이 관찰됩니다. 심전도가 심근 손상의 모든 가능성을 배제하지는 않습니다."},
@@ -112,8 +114,9 @@ crp:{name:"염증 표지자",sample:"정맥혈",rows:[["CRP","3.1 mg/L","< 5 mg/
 mra:{name:"뇌 MRI(DWI) 및 MRA 판독",sample:"뇌 MRI 확산강조영상 및 뇌혈관 MRA",rows:[["급성 확산 제한 병변","뚜렷하게 확인되지 않음","영상과 증상 종합","NORMAL"],["주요 뇌혈관 폐색","관찰되지 않음","-","NORMAL"],["양측 내경동맥 말단 협착 및 측부혈관","모야모야 양상 확인되지 않음","-","NORMAL"]],note:"이번 영상에서는 급성 뇌경색이나 모야모야병을 시사하는 전형적 혈관 소견이 보이지 않습니다. 다만 영상 음성만으로 일과성 허혈발작 및 모든 초기 허혈성 뇌졸중을 완전히 배제할 수는 없습니다. 신경학적 평가 결과와 함께 판단하십시오."}
 };const report=values[type];return {type,turn:g.turn,time:clock(g.turn),name:report.name,sample:report.sample,rows:report.rows,note:report.note,oxygen:g.oxygenTurn>0&&g.oxygenTurn<=g.turn};}
 function test(i){if(!actionAllowed(2,true)||g.x.has(i))return;g.ap-=2;g.count++;g.x.add(i);const report=makeReport(X[i].type);g.reports.push(report);
-const findings=i===1?"COHb "+report.rows[0][1]+"가 확인되었습니다. 검사 결과지를 열어 자세한 사항과 채혈 시점을 확인하세요.":i===0?"기본 ABGA에서 PaO₂는 정상 범위이며 젖산 상승과 경한 산증이 확인됩니다. 임상 소견과 함께 원인을 평가하십시오.":"검사실 결과지를 수령했습니다. 세부 수치를 확인하세요.";
-log("LAB-"+String(i+1).padStart(2,"0")+" · "+X[i].title,findings,i===1?"alert":"");
+const type=X[i].type;
+const findings=type==="co"?"혈색소 분획 결과가 도착했습니다. 세부 수치와 검체 채취 시각을 확인하세요.":type==="abga"?"기본 ABGA에서 "+(g.oxygenTurn?"산소 투여 중 PaO₂ 상승":"실내 공기 상태의 정상 PaO₂")+", 젖산 상승과 경한 산증이 확인됩니다. 임상 소견과 함께 원인을 평가하십시오.":type==="tox"?"일반 독성물질 선별검사 결과가 도착했습니다. 검사 대상 항목과 결과를 확인하세요.":"검사실 결과지를 수령했습니다. 세부 수치를 확인하세요.";
+log("LAB-"+String(i+1).padStart(2,"0")+" · "+X[i].title,findings,type==="co"?"alert":"");
 render();openReport(g.reports.length-1);
 }
 function treat(i){if(!actionAllowed(2,false)||g.t.has(i))return;g.ap-=2;g.t.add(i);let result="";
