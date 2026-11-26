@@ -23,7 +23,13 @@ main{max-width:1190px;margin:auto;padding:23px 18px 70px}header{display:flex;jus
 .ending{border:1px solid #436b7e;background:linear-gradient(140deg,#173646,#101e2b);border-radius:13px;padding:19px;margin-top:12px}.ending p{white-space:pre-wrap;line-height:2}.selects{display:grid;gap:12px}.selects label{font-size:13px;color:#d3e4f0}select{display:block;margin-top:7px;width:100%;color:white;background:#0e2232;border:1px solid #486a80;border-radius:8px;padding:12px}.footer{text-align:center;color:#8ca6b7;margin-top:25px;font-size:12px;line-height:1.9}
 @media(max-width:840px){.layout{grid-template-columns:1fr}.wide{grid-column:auto}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}main{padding:13px 12px 42px}.panel{padding:14px}}
 @media(max-width:430px){.vitals{grid-template-columns:repeat(2,minmax(0,1fr))}.cover{padding:12px}.result-table{font-size:12px}.result-table td,.result-table th{padding:9px 7px}}
-</style><link rel="stylesheet" href="./shared-ui.css?v=2">
+
+/* AP 및 턴 막대: 공통 스타일 파일이 이전 캐시여도 표시 */
+.ug-shell .ug-stat .track{display:flex!important;gap:5px;min-height:7px;align-items:center;margin-top:11px}
+.ug-shell .ug-stat .track .dot{display:block!important;flex:1 1 0;min-width:0;height:7px;border-radius:999px;background:#304253}
+.ug-shell .ug-stat .track .dot.on{background:#51bfd2}
+.ug-shell .ug-stat #stateDesc{display:block;margin-top:2px;font-size:11px;color:#a9becd}
+</style><link rel="stylesheet" href="./shared-ui.css?v=3">
 </head><body>
 <section id="intro" class="cover"><div class="cover-inner"><div class="kicker">UNDIAGNOSED · CASE 004 / 환자 인계</div><h1 class="cover-title">99%</h1><p class="help">프롤로그 · v0.4</p>
 <article class="paper"><p>오전 9시 40분. 주말의 응급실에는 아침부터 환자가 이어집니다.</p>
