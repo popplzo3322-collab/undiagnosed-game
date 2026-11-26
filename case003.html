@@ -19,7 +19,13 @@ main{max-width:1180px;margin:auto;padding:22px 18px 60px}header{display:flex;jus
 .result{background:#192d3d;border:1px solid #456174;border-radius:12px;padding:16px;margin-top:14px}.choices{display:grid;gap:10px;margin-top:14px}select{width:100%;background:#0d2030;color:#f2f7fc;border:1px solid #557285;border-radius:9px;padding:12px}.help{font-size:12px;color:#9fb5c7;line-height:1.7}.footer{text-align:center;color:#829db1;font-size:12px;line-height:1.8;margin-top:26px}
 @media(max-width:800px){.layout{grid-template-columns:1fr}.wide{grid-column:auto}.stats{grid-template-columns:repeat(2,1fr)}main{padding:14px 12px 42px}.panel{padding:14px}}
 @media(max-width:420px){.vitals{grid-template-columns:repeat(2,1fr)}.cover{padding:12px}}
-</style><link rel="stylesheet" href="./shared-ui.css?v=2">
+
+/* AP 및 턴 막대: 공통 스타일 파일이 이전 캐시여도 표시 */
+.ug-shell .ug-stat .track{display:flex!important;gap:5px;min-height:7px;align-items:center;margin-top:11px}
+.ug-shell .ug-stat .track .dot{display:block!important;flex:1 1 0;min-width:0;height:7px;border-radius:999px;background:#304253}
+.ug-shell .ug-stat .track .dot.on{background:#51bfd2}
+.ug-shell .ug-stat #stateDesc{display:block;margin-top:2px;font-size:11px;color:#a9becd}
+</style><link rel="stylesheet" href="./shared-ui.css?v=3">
 </head><body>
 <section class="cover" id="intro"><div class="cover-inner"><div class="kicker">UNDIAGNOSED · 미확진 / CASE 003</div>
 <h1>마지막 산책</h1><p class="help">프롤로그 · 초안 v0.1</p><article class="paper">
