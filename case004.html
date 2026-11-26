@@ -154,7 +154,8 @@ if(tab==="therapy")T.forEach(function(item,i){a.appendChild(btn("TX-"+String(i+1
 }
 function buildReport(index){const r=g.reports[index];if(!r)return "";
 let html='<div class="result-card"><div class="result-head"><small>UNDIAGNOSED · 응급진단검사의학과 · 가상 결과지</small><strong>'+esc(r.name)+'</strong></div>';
-html+='<div class="result-meta"><div>환자 ID<strong>CASE-004 / 27세 남성</strong></div><div>검체<strong>'+esc(r.sample)+'</strong></div><div>검체 채취<strong>진료 '+esc(r.turn)+'턴 · '+esc(r.time)+'</strong></div><div>산소치료 상태<strong>'+esc(r.oxygen?"산소치료 시작 후":"선택적 고농도 산소 미시작")+'</strong></div></div>';
+const treatmentMeta=((r.type==="abga"||r.type==="co")&&r.oxygen)?'<div>채혈 시 치료 환경<strong>고농도 산소 투여 중</strong></div>':'<div>검사 접수<strong>응급 검사</strong></div>';
+html+='<div class="result-meta"><div>환자 ID<strong>CASE-004 / 27세 남성</strong></div><div>검체<strong>'+esc(r.sample)+'</strong></div><div>검체 채취<strong>진료 '+esc(r.turn)+'턴 · '+esc(r.time)+'</strong></div>'+treatmentMeta+'</div>';
 html+='<table class="result-table"><thead><tr><th>항목</th><th>측정값</th><th>참고치 / 소견</th></tr></thead><tbody>';
 r.rows.forEach(function(a){const klass=a[3]==="HIGH"||a[3]==="LOW"?"high":a[3]==="NORMAL"?"normal":"";html+='<tr><td>'+esc(a[0])+'</td><td class="'+klass+'">'+esc(a[1])+'</td><td>'+esc(a[2])+'</td></tr>';});
 html+='</tbody></table><div class="result-note">'+esc(r.note)+'</div></div>';return html;}
