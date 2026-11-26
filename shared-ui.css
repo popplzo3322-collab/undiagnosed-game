@@ -1,0 +1,75 @@
+/* UNDIAGNOSED · shared in-game interface v1
+   The four cases retain their independent story logic and controls. */
+.ug-shell{width:100%;max-width:1180px;margin:0 auto;padding:22px 18px 65px;color:#e9f2fa;font-family:system-ui,-apple-system,'Pretendard','Noto Sans KR',sans-serif;font-size:14px;line-height:1.65}
+.ug-shell *{box-sizing:border-box}
+.ug-shell .ug-header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin:0 0 17px;padding:0}
+.ug-shell .ug-heading{min-width:0;flex:1 1 310px}
+.ug-shell .ug-kicker{color:#80cfdf;font-size:11px;font-weight:800;letter-spacing:.1em;line-height:1.6}
+.ug-shell .ug-header h1{font-size:clamp(26px,4vw,36px);line-height:1.2;letter-spacing:-.035em;margin:5px 0 6px;font-weight:780}
+.ug-shell .ug-subtitle{color:#aec0cf;font-size:12px;line-height:1.7;margin:0}
+.ug-shell .ug-nav{display:flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:wrap}
+.ug-shell .ug-btn,.ug-shell a.ug-btn,.ug-shell .ug-actions-footer button,.ug-shell .ug-final button{display:inline-flex;justify-content:center;align-items:center;text-decoration:none;border-radius:9px;border:1px solid #47657b;background:#20364a;color:#f0f7ff;padding:10px 14px;font-size:13px;line-height:1.5;font-weight:750;min-height:41px;cursor:pointer}
+.ug-shell .ug-btn:hover,.ug-shell a.ug-btn:hover,.ug-shell .ug-actions-footer button:hover:not(:disabled),.ug-shell .ug-final button:hover{background:#2c4b60;border-color:#89ccde}
+.ug-shell .ug-btn-primary,.ug-shell .ug-actions-footer .ug-btn-primary,.ug-shell .ug-final .primary{background:#176d86;border-color:#3ca4be}
+.ug-shell .ug-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 15px}
+.ug-shell .ug-stat{padding:13px 15px;border-radius:12px;border:1px solid #324c61;background:#182b3c;min-width:0;min-height:80px}
+.ug-shell .ug-stat small,.ug-shell .ug-stat .ug-stat-label{display:block;font-size:11px;color:#a3bacb;line-height:1.5}
+.ug-shell .ug-stat strong,.ug-shell .ug-stat b{display:block;margin-top:5px;font-size:21px;font-weight:800;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;line-height:1.35}
+.ug-shell .ug-stat .ug-stat-small{font-size:15px}
+.ug-shell .ug-grid{display:grid;grid-template-columns:minmax(0,1.28fr) minmax(0,1fr);gap:14px;align-items:stretch}
+.ug-shell .ug-card{border:1px solid #2e465b;background:#121f2e;border-radius:15px;padding:18px;min-width:0;box-shadow:none}
+.ug-shell .ug-card-wide{grid-column:1/-1}
+.ug-shell .ug-card h2{font-size:19px;line-height:1.35;margin:0 0 12px;color:#f0f7ff;letter-spacing:-.015em}
+.ug-shell .ug-eyebrow{display:block;font-size:11px;color:#7fc8db;font-weight:800;letter-spacing:.06em;margin:0 0 6px}
+.ug-shell .ug-hint{font-size:12px;color:#a3b8c8;line-height:1.8;margin:10px 0 0}
+.ug-shell .ug-card .ug-diagnosis{font-size:11px;color:#a1bdcc;margin:0 0 8px}
+.ug-shell .ug-patient #patientQuote,.ug-shell .ug-patient #speech{white-space:pre-wrap;display:block;margin:0 0 13px;padding:15px 16px;background:#1b3445;border-left:3px solid #71c2d6;border-radius:0 10px 10px 0;color:#e8f4ff;font-size:14px;line-height:1.88;min-height:78px}
+.ug-shell .ug-patient #vitals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}
+.ug-shell .ug-patient #vitals .measure,.ug-shell .ug-patient #vitals>div{min-width:0;border-radius:9px;background:#0d1927;padding:10px 11px;min-height:65px}
+.ug-shell .ug-patient #vitals span,.ug-shell .ug-patient #vitals small{display:block;color:#a0b7c9;font-size:11px;line-height:1.4}
+.ug-shell .ug-patient #vitals b{display:block;font-size:17px;margin-top:5px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;line-height:1.4}
+.ug-shell .ug-patient .ug-patient-flags{border-top:1px solid #293e51;margin-top:15px;padding-top:12px}
+.ug-shell .ug-patient .ug-patient-flags h3{font-size:12px;color:#9ec0ce;margin:0 0 7px}
+.ug-shell .ug-patient #flags{display:flex;gap:6px;flex-wrap:wrap}
+.ug-shell .ug-patient #flags .tag,.ug-shell .ug-patient #flags span{display:inline-flex;align-items:center;background:#24445a;color:#d2edfa;font-size:11px;border-radius:7px;padding:4px 8px;margin:2px}
+.ug-shell #tabs{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 12px}
+.ug-shell #tabs button{border-radius:8px;background:#1a3143;color:#c2d9e7;border:1px solid #405d73;padding:8px 11px;min-height:36px;font-size:12px;font-weight:750;line-height:1.45}
+.ug-shell #tabs button.active,.ug-shell #tabs button.selected{border-color:#71c5dc;background:#276983;color:white}
+.ug-shell #actions{display:grid;gap:8px;max-height:410px;overflow:auto;padding-right:2px;align-content:start}
+.ug-shell #actions .action,.ug-shell #actions .choice{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;padding:11px 12px;border:1px solid #36536a;border-radius:10px;background:#1b3042;color:#eef5ff;text-align:left;font-size:13px;font-weight:650;min-height:52px;line-height:1.5}
+.ug-shell #actions .action:hover:not(:disabled),.ug-shell #actions .choice:hover:not(:disabled){background:#29465a;border-color:#84ccdd}
+.ug-shell #actions button:disabled{opacity:.4;cursor:not-allowed}
+.ug-shell #actions strong,.ug-shell #actions b{display:block;font-size:13px;line-height:1.5;font-weight:750}
+.ug-shell #actions small{display:block;color:#abc0d0;font-size:11px;line-height:1.6;margin-top:3px;font-weight:450}
+.ug-shell #actions .cost,.ug-shell #actions .price{white-space:nowrap;color:#a3ebed;font-size:12px}
+.ug-shell .ug-actions-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:14px;border-top:1px solid #294050;padding-top:14px}
+.ug-shell .ug-actions-footer .ug-hint{margin:0}
+.ug-shell #journal{max-height:360px;overflow:auto}
+.ug-shell #journal .entry{background:#1b3041;border-left:3px solid #66acc5;border-radius:0 9px 9px 0;padding:12px;margin:0 0 8px;white-space:normal;font-size:13px;line-height:1.7}
+.ug-shell #journal .entry small{display:block;color:#9bb8ca;font-size:11px}
+.ug-shell #journal .entry strong{display:block;margin:4px 0;font-size:13px;color:#e8f6fd}
+.ug-shell #journal .entry p{font-size:12px;line-height:1.85;white-space:pre-wrap;margin:3px 0 0;color:#dce7f2}
+.ug-shell #journal .entry.alert{border-color:#dfab70;background:#382c2d}
+.ug-shell #journal .entry.good{border-color:#6dcba6}
+.ug-shell #evidence{display:flex;flex-wrap:wrap;align-content:flex-start;gap:6px;min-height:24px;font-size:13px;color:#d4e6f1}
+.ug-shell #evidence .tag,.ug-shell #evidence .chip,.ug-shell #evidence>span{background:#26475b;color:#d8f0f8;border-radius:7px;padding:5px 8px;font-size:11px;border:0;margin:0}
+.ug-shell .ug-notes{margin-top:12px;width:100%;min-height:86px;resize:vertical;background:#0e1d2b;color:#eaf3ff;border:1px solid #3c5970;border-radius:9px;padding:11px;line-height:1.7;font-size:13px}
+.ug-shell .ug-notes:focus{outline:2px solid #5aafc7;outline-offset:1px}
+.ug-shell .ug-notes-label{display:block;color:#afc5d5;font-size:12px;margin:12px 0 5px}
+.ug-shell .ug-booknav{display:flex;gap:7px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin;padding-bottom:11px;margin:0}
+.ug-shell .ug-booknav button{flex:0 0 auto;white-space:nowrap;border-radius:8px;background:#1c3448;border:1px solid #3e5b70;color:#c6dcea;padding:7px 10px;font-size:12px;font-weight:600;min-height:35px}
+.ug-shell .ug-booknav button.active,.ug-shell .ug-booknav button.selected,.ug-shell .ug-booknav button.on{background:#286681;border-color:#84cede;color:white}
+.ug-shell .ug-bookbody{font-size:13px;line-height:1.9;white-space:pre-wrap;background:#192f41;border-radius:11px;padding:16px;color:#dce9f3;max-height:290px;overflow:auto;min-height:80px}
+.ug-shell .ug-bookbody h3{font-size:15px;margin:0 0 10px;color:#f2f7fc}
+.ug-shell .ug-bookbody p{margin:0 0 11px}
+.ug-shell .ug-bookbody p:last-child{margin-bottom:0}
+.ug-shell .ug-special .ug-animal-text{background:#302e2b;border-left:3px solid #e6be87;color:#f2e8db;white-space:pre-wrap;padding:15px;border-radius:0 10px 10px 0;line-height:1.9}
+.ug-shell .ug-special #reports{display:flex;gap:8px;flex-wrap:wrap}
+.ug-shell .ug-special #reports button{background:#1d394b;border:1px solid #456b80;border-radius:9px;color:#d8f0fa;padding:9px 12px;font-size:12px}
+.ug-shell .ug-final{grid-column:1/-1;position:static;border:1px solid #41677a;background:#172b3b;border-radius:15px;padding:19px;margin:0;max-width:100%;color:#ebf4fa}
+.ug-shell .ug-final h2{font-size:20px}
+.ug-shell .ug-final select{width:100%;max-width:100%;padding:10px;margin-top:8px}
+.ug-shell .ug-final .result,.ug-shell .ug-final #final{white-space:pre-wrap;line-height:1.85}
+.ug-shell .ug-footer{color:#91acbd;font-size:11px;line-height:1.85;margin-top:19px;text-align:center}
+@media(max-width:820px){.ug-shell{padding:14px 12px 52px}.ug-shell .ug-grid{grid-template-columns:1fr}.ug-shell .ug-card-wide,.ug-shell .ug-final{grid-column:auto}.ug-shell .ug-card{padding:15px}.ug-shell .ug-header{align-items:flex-start}}
+@media(max-width:540px){.ug-shell .ug-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.ug-shell .ug-stat{padding:11px;min-height:73px}.ug-shell .ug-stat strong{font-size:19px}.ug-shell .ug-header h1{font-size:27px}.ug-shell .ug-nav{width:100%;justify-content:flex-start}.ug-shell .ug-nav .ug-btn{flex:1 1 auto}.ug-shell .ug-patient #vitals{grid-template-columns:repeat(2,minmax(0,1fr))}.ug-shell .ug-actions-footer .ug-btn-primary{width:100%}.ug-shell .ug-bookbody{max-height:360px}}
