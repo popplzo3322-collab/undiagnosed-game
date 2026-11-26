@@ -54,8 +54,14 @@ body.intro-open{overflow:hidden}
 .world-case span{font-size:12px;line-height:1.7;color:#aec4d4}
 .world-footnote{color:#94adbf;font-size:12px;line-height:1.8;margin-top:18px}
 @media(max-width:580px){.world-cases{grid-template-columns:1fr}.world-case{min-height:0}.world-inner{margin:0 auto}}
+
+/* AP 및 턴 막대: 공통 스타일 파일이 이전 캐시여도 표시 */
+.ug-shell .ug-stat .track{display:flex!important;gap:5px;min-height:7px;align-items:center;margin-top:11px}
+.ug-shell .ug-stat .track .dot{display:block!important;flex:1 1 0;min-width:0;height:7px;border-radius:999px;background:#304253}
+.ug-shell .ug-stat .track .dot.on{background:#51bfd2}
+.ug-shell .ug-stat #stateDesc{display:block;margin-top:2px;font-size:11px;color:#a9becd}
 </style>
-<link rel="stylesheet" href="./shared-ui.css?v=2">
+<link rel="stylesheet" href="./shared-ui.css?v=3">
 </head>
 <body class="intro-open">
 
