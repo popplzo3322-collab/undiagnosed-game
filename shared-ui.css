@@ -16,6 +16,12 @@
 .ug-shell .ug-stat small,.ug-shell .ug-stat .ug-stat-label{display:block;font-size:11px;color:#a3bacb;line-height:1.5}
 .ug-shell .ug-stat strong,.ug-shell .ug-stat b{display:block;margin-top:5px;font-size:21px;font-weight:800;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;line-height:1.35}
 .ug-shell .ug-stat .ug-stat-small{font-size:15px}
+/* Uniform four-turn and remaining-AP segmented indicators. */
+.ug-shell .ug-stat .track{display:flex;gap:5px;margin-top:11px;min-height:7px;align-items:stretch}
+.ug-shell .ug-stat .track .dot{display:block;flex:1 1 0;min-width:0;height:7px;border-radius:999px;background:#304253;transition:background-color .16s ease}
+.ug-shell .ug-stat .track .dot.on{background:#51bfd2}
+.ug-shell .ug-stat #stateDesc{display:block;margin-top:2px;font-size:11px;color:#a9becd}
+
 .ug-shell .ug-grid{display:grid;grid-template-columns:minmax(0,1.28fr) minmax(0,1fr);gap:14px;align-items:stretch}
 .ug-shell .ug-card{border:1px solid #2e465b;background:#121f2e;border-radius:15px;padding:18px;min-width:0;box-shadow:none}
 .ug-shell .ug-card-wide{grid-column:1/-1}
