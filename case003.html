@@ -155,7 +155,7 @@ const dog=[
 {ok:d[1]!==undefined&&d[1]<=3,label:"강아지의 신장·간 상태 확인"},
 {ok:d[2]!==undefined&&d[2]<=3,label:"강아지 감염병 전문검사 의뢰"}];
 const hScore=human.filter(o=>o.ok).length,dScore=dog.filter(o=>o.ok).length;
-return {human,dog,hScore,dScore,hAlive:hScore>=2&&human[0].ok,dAlive:dScore>=2&&dog[0].ok};
+return {human,dog,hScore,dScore,hAlive:hScore>=2&&human[0].ok&&human[2].ok,dAlive:dScore>=2&&dog[0].ok&&dog[2].ok};
 }
 const EPILOGUES={
 both:{
