@@ -76,7 +76,7 @@ button:disabled{opacity:.4;cursor:not-allowed}a{color:#96d6ea}.hidden{display:no
 </section>
 <main class="ug-shell">
 <header class="ug-header">
- <div class="ug-heading"><div class="ug-kicker">UNDIAGNOSED · 미확진 · CASE 005</div><h1>다 나은 줄 알았는데</h1><p class="ug-subtitle">4턴 · 매 턴 4 AP · 문진 1 AP / 검사·처치 2 AP</p></div>
+ <div class="ug-heading"><div class="ug-kicker">UNDIAGNOSED · 미확진 · CASE 005</div><h1>다 나은 줄 알았는데</h1><p class="ug-subtitle">4턴 · 매 턴 4 AP · 문진·집중 감시 1 AP / 검사·그 외 처치 2 AP</p></div>
  <nav class="ug-nav" aria-label="사건 탐색"><a class="ug-btn" href="./?cases">전체 사건 목록</a><button type="button" class="ug-btn" id="reset">처음부터</button></nav>
 </header>
 <div class="ug-stats">
@@ -158,7 +158,7 @@ const X=[
 ];
 const T=[
  {title:"소아 신장·중환자팀 긴급 협진",desc:"원인과 무관하게 소변량 감소·전신상태를 소아 전문팀과 함께 평가",key:"consult"},
- {title:"체액 균형·소변량·혈압 집중 감시",desc:"몸무게, 섭취·배설량과 활력징후를 연속적으로 확인",key:"monitor"},
+ {title:"체액 균형·소변량·혈압 집중 감시",desc:"몸무게, 섭취·배설량과 활력징후를 연속적으로 확인",key:"monitor",cost:1},
  {title:"전해질 이상에 대한 응급평가·관리",desc:"검사값을 확인하고 심전도 등 필요한 대응을 연계",key:"electrolyte"},
  {title:"수분 상태 평가 후 개별화된 수액 처방",desc:"탈수와 소변량 감소·체액 과부하 위험을 함께 고려",key:"fluid"},
  {title:"신장대체요법 필요성 평가",desc:"소아 신장팀과 중증 신손상·전해질 이상에 대한 치료계획 검토",key:"renal"},
@@ -255,9 +255,9 @@ function study(i){
  render();openReport(g.labs.length-1);
 }
 function treat(i){
- const action=T[i];if(!action||!canAct(2,false)||g.t.has(i))return;
+ const action=T[i];if(!action||!canAct(action.cost||2,false)||g.t.has(i))return;
  if(action.key==="electrolyte"&&!g.x.has(1)&&!g.x.has(9))return;
- g.ap-=2;g.t.add(i);g.tx[action.key]=g.turn;
+ g.ap-=action.cost||2;g.t.add(i);g.tx[action.key]=g.turn;
  const responses={
  consult:"소아 전문팀에 진료를 요청했습니다. 환자의 전신 상태와 신장 관련 소견을 함께 재평가합니다.",
  monitor:"섭취·배설량, 소변량, 체중과 혈압을 집중 감시하기 시작합니다.",
@@ -275,7 +275,10 @@ function treat(i){
 function scoreOutcome(){
  const fast=!!(g.tx.consult&&g.tx.consult<=2&&g.tx.monitor&&g.tx.monitor<=2);
  const complete=!!(g.tx.electrolyte||g.tx.renal);
- if(fast&&complete&&g.harm===0)return "A";
+ // A엔딩은 필수 치료뿐 아니라 빈혈·혈소판 감소·신기능 이상,
+ // 용혈 또는 원인 감염을 뒷받침하는 검사 근거가 있어야 한다.
+ const evidence=g.x.has(0)&&g.x.has(1)&&(g.x.has(3)||g.labs.some(r=>r.type==="stool"&&r.status==="done"));
+ if(fast&&complete&&evidence&&g.harm===0)return "A";
  if(g.tx.consult&&g.tx.monitor&&g.harm===0)return "B";
  if((g.tx.consult||g.tx.monitor||g.tx.fluid)&&g.harm<2)return "C";
  return "D";
@@ -329,7 +332,7 @@ function renderActions(){
  if(g.ended)return;
  if(tab==="history")H.forEach((h,i)=>{if(!canHistory(i))return;a.appendChild(actionButton("H-"+String(i+1).padStart(2,"0")+" · "+h[0],"보호자에게 문진",1,!canAct(1,false)||g.h.has(i),()=>history(i)));});
  if(tab==="test")X.forEach((x,i)=>{if(x.type==="follow"&&!g.x.has(1))return;a.appendChild(actionButton("LAB-"+String(i+1).padStart(2,"0")+" · "+x.title,x.desc,2,!canAct(2,true)||g.x.has(i),()=>study(i)));});
- if(tab==="therapy")T.forEach((t,i)=>{if(t.key==="electrolyte"&&!g.x.has(1)&&!g.x.has(9))return;a.appendChild(actionButton("TX-"+String(i+1).padStart(2,"0")+" · "+t.title,t.desc,2,!canAct(2,false)||g.t.has(i),()=>treat(i)));});
+ if(tab==="therapy")T.forEach((t,i)=>{if(t.key==="electrolyte"&&!g.x.has(1)&&!g.x.has(9))return;const cost=t.cost||2;a.appendChild(actionButton("TX-"+String(i+1).padStart(2,"0")+" · "+t.title,t.desc,cost,!canAct(cost,false)||g.t.has(i),()=>treat(i)));});
 }
 function renderBook(){
  const nav=$("books");nav.innerHTML="";
