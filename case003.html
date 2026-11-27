@@ -128,7 +128,7 @@ if(p.type==="doglepto")log("동물병원 전문검사 결과","동물병원: 렙
 if(p.type==="culture")log("배양 중간 보고","현재까지 혈액배양에서 원인균이 확인되지 않았습니다. 최종 결과는 아직 확정되지 않았습니다.");
 }
 return arriving.length;}
-function next(){if(g.ended)return;if(g.turn===4){if(deliverPending(true)){render();return;}
+function next(){if(g.ended)return;if(g.turn===4){if(deliverPending(true)){render();$("journal").scrollIntoView({behavior:"smooth",block:"start"});return;}
 g.ended=true;$("ending").classList.remove("hidden");
 const survival=survivalScores();
 if(!survival.hAlive||!survival.dAlive){
