@@ -118,9 +118,17 @@ else{g.humanResponse={turn:g.turn,description:observations[i],treatment:i};}
 }
 if(kind==="d"&&i===6){g.dogResponse={turn:g.turn,description:"동물병원 입원과 치료가 연계되었습니다. 수액·항생제 등 치료가 시작되지만, 지금 당장 신장 기능이 정상화되지는 않습니다."};}
 if(kind==="d"&&i===3){g.dogResponse={turn:g.turn,description:"동물병원 담당자는 수액·항생제 치료가 진행 중이라고 전합니다. 구토와 소변량을 반복 확인해야 합니다."};}
-log(code+"-"+String(i+1).padStart(2,"0")+" · "+item[0],item[1]);
+log(code+"-"+String(i+1).padStart(2,"0")+" · "+item[0],g.turn===4&&item[2]?item[1].replace(/다음 턴에?/g,"최종 보고 전 검사 결과 확인 단계에서"):item[1]);
 render();}
-function next(){if(g.ended)return;if(g.turn===4){
+function deliverPending(final=false){const arriving=g.pending.filter(o=>final||o.due<=g.turn);g.pending=g.pending.filter(o=>!final&&o.due>g.turn);
+for(const p of arriving){g.results[p.type]=true;
+if(p.type==="sfts")log("전문검사 · 사람 검체","SFTS 바이러스 RT-PCR: 양성. 발열, 혈구감소 및 임상 경과와 함께 해석합니다.");
+if(p.type==="lepto")log("전문검사 · 사람 검체","렙토스피라 PCR 및 현재 혈청학적 평가에서 감염을 뒷받침하는 소견이 확인되지 않았습니다. 검체 시점과 임상 경과를 함께 고려합니다.");
+if(p.type==="doglepto")log("동물병원 전문검사 결과","동물병원: 렙토스피라 PCR 양성. 신손상과 구토 등 임상 소견을 종합하여 수의사가 치료를 이어갑니다.");
+if(p.type==="culture")log("배양 중간 보고","현재까지 혈액배양에서 원인균이 확인되지 않았습니다. 최종 결과는 아직 확정되지 않았습니다.");
+}
+return arriving.length;}
+function next(){if(g.ended)return;if(g.turn===4){if(deliverPending(true)){render();return;}
 g.ended=true;$("ending").classList.remove("hidden");
 const survival=survivalScores();
 if(!survival.hAlive||!survival.dAlive){
@@ -134,13 +142,7 @@ $("final").classList.remove("hidden");
 $("submit").disabled=true;g.guess=true;
 }
 render();$("ending").scrollIntoView({behavior:"smooth",block:"start"});return;}
-g.turn++;g.ap=6;g.count=0;let arriving=g.pending.filter(o=>o.due<=g.turn);g.pending=g.pending.filter(o=>o.due>g.turn);
-for(const p of arriving){g.results[p.type]=true;
-if(p.type==="sfts")log("전문검사 · 사람 검체","SFTS 바이러스 RT-PCR: 양성. 발열, 혈구감소 및 임상 경과와 함께 해석합니다.");
-if(p.type==="lepto")log("전문검사 · 사람 검체","렙토스피라 PCR 및 현재 혈청학적 평가에서 감염을 뒷받침하는 소견이 확인되지 않았습니다. 검체 시점과 임상 경과를 함께 고려합니다.");
-if(p.type==="doglepto")log("동물병원 전문검사 결과","동물병원: 렙토스피라 PCR 양성. 신손상과 구토 등 임상 소견을 종합하여 수의사가 치료를 이어갑니다.");
-if(p.type==="culture")log("배양 중간 보고","현재까지 혈액배양에서 원인균이 확인되지 않았습니다. 최종 결과는 아직 확정되지 않았습니다.");
-}
+g.turn++;g.ap=6;g.count=0;deliverPending();
 log("경과 관찰","새로운 상태 카드가 공개됩니다.");render();}
 function survivalScores(){
 const t=g.firstTurns.t,x=g.firstTurns.x,d=g.firstTurns.d;
@@ -201,7 +203,7 @@ function button(label,cost,desc,disabled,fn){let b=document.createElement("butto
 function actions(){let tabs=$("tabs"),a=$("actions");tabs.innerHTML="";a.innerHTML="";const names=[["history","환자·가족"],["test","환자 검사"],["dog","강아지 조사"],["therapy","처치·협진"]];for(const [id,name] of names){let b=document.createElement("button");b.className=tab===id?"active":"";b.textContent=name;b.onclick=()=>{tab=id;actions();};tabs.appendChild(b);}
 if(g.ended)return;
 if(tab==="history")H.forEach((o,i)=>{if((i===3&&!g.h.has(2))||((i===4||i===5)&&!g.h.has(3)))return;a.appendChild(button("H-"+String(i+1).padStart(2,"0")+" · "+o[0],1,"환자 진술이 불가능하면 구급대·가족·기록을 확인",!can(1,false)||g.h.has(i),()=>act("h",i)));});
-if(tab==="test")X.forEach((o,i)=>a.appendChild(button("검사 · "+o[0],2,"이번 턴 최대 2회 · 일부 전문검사는 다음 턴 도착",!can(2,true)||g.x.has(i),()=>act("x",i))));
+if(tab==="test")X.forEach((o,i)=>a.appendChild(button("검사 · "+o[0],2,g.turn===4?"이번 턴 최대 2회 · 의뢰 결과는 최종 보고 전 확인":"이번 턴 최대 2회 · 일부 전문검사는 다음 턴 도착",!can(2,true)||g.x.has(i),()=>act("x",i))));
 if(tab==="dog")D.forEach((o,i)=>a.appendChild(button("DOG-"+String(i+1).padStart(2,"0")+" · "+o[0],1,"동물병원 기록 요청 · 1 AP",!can(1,false)||g.d.has(i),()=>act("d",i))));
 if(tab==="therapy")T.forEach((o,i)=>a.appendChild(button(o[0],2,"환자 또는 동물병원 관련 처치·협진",!can(2,false)||g.t.has(i),()=>act("t",i))));}
 function renderBook(){let nav=$("books");nav.innerHTML="";Object.keys(BOOK).forEach(k=>{let b=document.createElement("button");b.textContent=k;b.className=k===book?"on":"";b.onclick=()=>{book=k;renderBook();};nav.appendChild(b)});$("book").textContent=BOOK[book];}
@@ -219,7 +221,7 @@ d[0]+=" · 관찰 중";d[1]+="\n\n[수의학적 경과]\n"+g.dogResponse.descrip
 $("turn").textContent=g.turn+" / 4";$("ap").textContent=g.ap+" AP";$("count").textContent=g.count+" / 2";$("turnTrack").innerHTML=Array.from({length:4},(_,i)=>'<span class="dot '+(i<g.turn?'on':'')+'"></span>').join("");$("apTrack").innerHTML=Array.from({length:6},(_,i)=>'<span class="dot '+(i<g.ap?'on':'')+'"></span>').join("");$("turnTrack").setAttribute("aria-valuenow",String(g.turn));$("apTrack").setAttribute("aria-valuenow",String(g.ap));$("stateDesc").textContent=g.ended?"진료 종료 · 결과 확인":"문진 · 검사 · 동물병원";$("status").textContent=g.ended?"추리 보고":p[1];$("statecode").textContent=p[0];$("statetitle").textContent=p[1];$("speech").textContent=p[2];$("dogtitle").textContent=d[0];$("dogtext").textContent=d[1];$("vitals").innerHTML=[["체온",p[3]],["혈압",p[4]],["맥박",p[5]+" bpm"],["호흡수",p[6]+"/min"],["SpO₂",p[7]]].map(k=>"<div><small>"+esc(k[0])+"</small><b>"+esc(k[1])+"</b></div>").join("");
 let tags=[...g.h].map(i=>"H-"+String(i+1).padStart(2,"0")).concat([...g.x].map(i=>"검사: "+X[i][0]),[...g.d].map(i=>"DOG-"+String(i+1).padStart(2,"0")),Object.keys(g.results).map(k=>"결과: "+k));$("evidence").innerHTML=tags.length?tags.map(t=>"<span class='tag'>"+esc(t)+"</span>").join(""):"아직 추가 단서가 없습니다.";
 $("journal").innerHTML=g.logs.slice(0,22).map(x=>"<div class='entry'><small>"+esc(x.turn)+"턴 · 사건 기록</small><strong>"+esc(x.title)+"</strong><p>"+esc(x.body)+"</p></div>").join("");
-$("next").disabled=g.ended;$("next").textContent=g.turn===4?"진료 종료 · 추리 보고 →":"턴 종료 →";actions();renderBook();}
+$("next").disabled=g.ended;$("next").textContent=g.turn===4?(g.pending.length?"검사 결과 확인 →":"진료 종료 · 추리 보고 →"):"턴 종료 →";actions();renderBook();}
 $("start").onclick=()=>{$("intro").classList.add("hidden");window.scrollTo(0,0);};
 $("reset").onclick=reset;$("next").onclick=next;$("submit").onclick=showEnd;reset();
 </script></body></html>
