@@ -173,8 +173,12 @@ function reportData(type){
  };
  return all[type];
 }
+function testVisible(x){
+ return x.type!=="pressure"||!!g.tx.consult;
+}
 function testLocked(x,i){
- return (x.type==="pressure"&&!g.tx.consult)||(g.x.has(i)&&(x.type!=="blood"&&x.type!=="neuro"||g.labs.some(l=>l.type===x.type&&l.taken===g.turn)));
+ if(!testVisible(x))return true;
+ return (g.x.has(i)&&(x.type!=="blood"&&x.type!=="neuro"||g.labs.some(l=>l.type===x.type&&l.taken===g.turn)));
 }
 function study(i){
  const x=X[i];if(!x||!canAct(2,true)||testLocked(x,i))return;
@@ -241,7 +245,7 @@ function renderActions(){
  });
  if(g.ended)return;
  if(tab==="history")H.forEach((h,i)=>{a.appendChild(actionButton("H-"+String(i+1).padStart(2,"0")+" · "+h[0],"환자 문진",2,!canAct(2,false)||g.h.has(i),()=>history(i)));});
- if(tab==="test")X.forEach((x,i)=>{a.appendChild(actionButton("LAB-"+String(i+1).padStart(2,"0")+" · "+x.title,x.desc,2,!canAct(2,true)||testLocked(x,i),()=>study(i)));});
+ if(tab==="test")X.forEach((x,i)=>{if(!testVisible(x))return;a.appendChild(actionButton("LAB-"+String(i+1).padStart(2,"0")+" · "+x.title,x.desc,2,!canAct(2,true)||testLocked(x,i),()=>study(i)));});
  if(tab==="therapy")T.forEach((t,i)=>{
   if(t.key==="surgery"&&!canOperate())return;
   a.appendChild(actionButton("TX-"+String(i+1).padStart(2,"0")+" · "+t.title,t.desc,t.cost,!canAct(t.cost,false)||g.t.has(i),()=>treat(i)));
