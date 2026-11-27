@@ -214,8 +214,9 @@ function study(i){
  g.labs.push({...reportData(x.type),type:x.type,title:x.title,taken:g.turn});
  log("검사 결과 · "+x.title,"검사 결과 보관함에서 상세 소견을 열 수 있습니다.");render();openReport(g.labs.length-1);
 }
+function treatmentVisible(t){return t.key!=="replace"||g.x.has(0);}
 function treat(i){
- const t=T[i];if(!t||!canAct(2,false)||g.t.has(i)||(t.key==="replace"&&!g.x.has(0)))return;
+ const t=T[i];if(!t||!canAct(2,false)||g.t.has(i)||!treatmentVisible(t))return;
  g.ap-=2;g.t.add(i);g.tx[t.key]=g.turn;
  const responses={
   fluid:"맥박이 느려지고 입 마름이 덜해졌습니다. 깊고 빠른 호흡은 이어집니다.",
@@ -288,7 +289,8 @@ function renderActions(){
  if(tab==="history")H.forEach((h,i)=>{a.appendChild(actionButton("H-"+String(i+1).padStart(2,"0")+" · "+h[0],"환자 문진",1,!canAct(1,false)||g.h.has(i),()=>history(i)));});
  if(tab==="test")X.forEach((x,i)=>{if(!testVisible(x))return;a.appendChild(actionButton("LAB-"+String(i+1).padStart(2,"0")+" · "+x.title,x.desc,2,!canAct(2,true)||testLocked(x,i),()=>study(i)));});
  if(tab==="therapy")T.forEach((t,i)=>{
-  a.appendChild(actionButton("TX-"+String(i+1).padStart(2,"0")+" · "+t.title,t.desc,2,!canAct(2,false)||g.t.has(i)||(t.key==="replace"&&!g.x.has(0)),()=>treat(i)));
+  if(!treatmentVisible(t))return;
+  a.appendChild(actionButton("TX-"+String(i+1).padStart(2,"0")+" · "+t.title,t.desc,2,!canAct(2,false)||g.t.has(i),()=>treat(i)));
  });
 }
 function renderBook(){
