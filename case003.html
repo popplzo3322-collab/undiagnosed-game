@@ -144,7 +144,7 @@ $("submit").disabled=true;g.guess=true;
 render();$("ending").scrollIntoView({behavior:"smooth",block:"start"});return;}
 g.turn++;g.ap=6;g.count=0;deliverPending();
 log("경과 관찰","새로운 상태 카드가 공개됩니다.");render();}
-function fullCaseEvidence(){return g.firstTurns.x[7]!==undefined&&g.firstTurns.x[7]<=3&&g.firstTurns.d[2]!==undefined&&g.firstTurns.d[2]<=3;}
+function fullCaseEvidence(){const assessment=survivalScores();return assessment.hScore===3&&assessment.dScore===3;}
 function survivalScores(){
 const t=g.firstTurns.t,x=g.firstTurns.x,d=g.firstTurns.d;
 const human=[
