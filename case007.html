@@ -196,9 +196,15 @@ function reportData(type){
   response:{sample:"정맥혈",rows:[glucose,rowK,...metabolic],note:"이전 검사와 비교해 치료 반응을 평가합니다."}
  }[type];
 }
+function testVisible(x){
+ if(x.type==="repeat")return g.x.has(0);
+ if(x.type==="response")return !!g.tx.insulin&&g.turn>g.tx.insulin;
+ return true;
+}
 function testLocked(x,i){
- if(x.type==="repeat")return !g.x.has(0)||g.labs.some(r=>r.type==="repeat"&&r.taken===g.turn);
- if(x.type==="response")return !g.tx.insulin||g.turn<=g.tx.insulin||g.x.has(i);
+ if(!testVisible(x))return true;
+ if(x.type==="repeat")return g.labs.some(r=>r.type==="repeat"&&r.taken===g.turn);
+ if(x.type==="response")return g.x.has(i);
  return g.x.has(i);
 }
 function study(i){
@@ -280,7 +286,7 @@ function renderActions(){
  });
  if(g.ended)return;
  if(tab==="history")H.forEach((h,i)=>{a.appendChild(actionButton("H-"+String(i+1).padStart(2,"0")+" · "+h[0],"환자 문진",1,!canAct(1,false)||g.h.has(i),()=>history(i)));});
- if(tab==="test")X.forEach((x,i)=>{a.appendChild(actionButton("LAB-"+String(i+1).padStart(2,"0")+" · "+x.title,x.desc,2,!canAct(2,true)||testLocked(x,i),()=>study(i)));});
+ if(tab==="test")X.forEach((x,i)=>{if(!testVisible(x))return;a.appendChild(actionButton("LAB-"+String(i+1).padStart(2,"0")+" · "+x.title,x.desc,2,!canAct(2,true)||testLocked(x,i),()=>study(i)));});
  if(tab==="therapy")T.forEach((t,i)=>{
   a.appendChild(actionButton("TX-"+String(i+1).padStart(2,"0")+" · "+t.title,t.desc,2,!canAct(2,false)||g.t.has(i)||(t.key==="replace"&&!g.x.has(0)),()=>treat(i)));
  });
