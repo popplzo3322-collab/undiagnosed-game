@@ -245,7 +245,7 @@ function study(i){
  if(x.type==="follow"&&!g.x.has(1))return;
  g.ap-=2;g.count++;g.x.add(i);
  if(x.delay){
-  const report={type:x.type,title:x.title,sample:"대변",rows:[["검사 진행","결과 대기 중","접수 완료",""]],note:"검사실 접수가 완료되었습니다. 결과는 다음 진료 턴 이후에 도착할 예정입니다.",taken:g.turn,status:"pending"};
+  const report={type:x.type,title:x.title,sample:"대변",rows:[["검사 진행","결과 대기 중","접수 완료",""]],note:g.turn===4?"검사실 접수가 완료되었습니다. 최종 보고 전에 검사 결과 확인 단계에서 도착합니다.":"검사실 접수가 완료되었습니다. 결과는 다음 진료 턴 이후에 도착할 예정입니다.",taken:g.turn,status:"pending"};
   const reportIndex=g.labs.push(report)-1;g.pending.push({type:x.type,due:g.turn+x.delay,reportIndex,ordered:g.turn});
   log("LAB-"+String(i+1).padStart(2,"0")+" · "+x.title,"검체가 접수되었습니다. 결과 보고를 기다리고 있습니다.");
  }else{
@@ -301,14 +301,17 @@ function submitFinal(){
  const explanation="최종 진단: 용혈성요독증후군(HUS).\n\n이 가상 사건에서는 시가독소 생성 대장균(STEC)에 의한 장 감염 이후, 적혈구가 손상되고 혈소판이 감소하며 급성 신손상이 발생했습니다. 혈액검사상 빈혈과 혈소판 감소, 신기능 이상 및 말초혈액도말의 분열적혈구가 주요 근거였습니다.\n\n설사가 잦아든 뒤에도 창백함과 소변량 감소가 나타날 수 있습니다. 대변 병원체 검사를 의뢰했다면 감염을 뒷받침하는 추가 정보를 얻을 수 있습니다.\n\n추석 가족 식사의 덜 익힌 다진 고기는 가능한 노출 경로이지만, 해당 음식이 감염원이었다는 사실이 검사로 입증된 것은 아닙니다.\n\n실제 HUS는 전문의 평가, 체액·전해질 조절, 신장기능 감시 및 필요시 신장대체요법 등 지지치료가 중요합니다. STEC 감염이 의심되면 항균제나 장운동 억제성 지사제 처방을 일률적으로 결정해서는 안 됩니다.\n\n본 엔딩의 생존 여부는 교육용 게임 분기이며 실제 환자 예후를 점수로 예측하지 않습니다.";
  $("final").textContent="최종 추리: "+(right?"정답":"오답")+"\n\n"+explanation;$("final").classList.remove("hidden");$("submit").disabled=true;$("final").scrollIntoView({behavior:"smooth",block:"start"});
 }
-function next(){
- if(g.ended)return;if(g.turn===4){finish();return;}
- g.turn++;g.ap=4;g.count=0;g.response="";
- const arrive=g.pending.filter(p=>p.due<=g.turn);g.pending=g.pending.filter(p=>p.due>g.turn);
+function deliverPending(final=false){
+ const arrive=g.pending.filter(p=>final||p.due<=g.turn);g.pending=g.pending.filter(p=>!final&&p.due>g.turn);
  arrive.forEach(p=>{
   const result=reportData(p.type,p.ordered);result.taken=p.ordered;
   g.labs[p.reportIndex]=result;log("검사실 추가 보고 · "+result.title,"의뢰된 검사 결과가 도착했습니다. 검사결과지 보관함에서 확인할 수 있습니다.");
  });
+ return arrive.length;
+}
+function next(){
+ if(g.ended)return;if(g.turn===4){if(deliverPending(true)){render();return;}finish();return;}
+ g.turn++;g.ap=4;g.count=0;g.response="";deliverPending();
  log("진료 경과","새로운 진료 상태가 공개되었습니다.");render();
 }
 function actionButton(label,subtitle,cost,disabled,onClick){
@@ -349,7 +352,7 @@ function render(){
  const box=$("reports");box.innerHTML="";
  g.labs.forEach((r,i)=>{const btn=document.createElement("button");btn.textContent=(r.status==="pending"?"검사 대기 · ":"")+r.title+" · "+r.taken+"턴";btn.onclick=()=>openReport(i);box.appendChild(btn);});
  if(!g.labs.length)box.innerHTML='<span class="ug-hint">아직 검사한 항목이 없습니다.</span>';
- $("next").textContent=g.turn===4?"진료 종료 · 에필로그 →":"다음 턴 →";$("next").disabled=g.ended;
+ $("next").textContent=g.turn===4?(g.pending.length?"검사 결과 확인 →":"진료 종료 · 에필로그 →"):"다음 턴 →";$("next").disabled=g.ended;
  renderActions();renderBook();
 }
 $("start").onclick=()=>{$("intro").classList.add("hidden");window.scrollTo(0,0)};
