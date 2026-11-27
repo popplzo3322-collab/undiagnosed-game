@@ -187,7 +187,7 @@ function encounterState(){
  ["S4 · 최종 평가","더 기다릴 수 있을까","통증이 지속됩니다. 환자는 지친 표정으로 언제 집에 갈 수 있는지 묻습니다.","37.5","112/70","118","24","98","환자의 현재 상태를 다시 판단하세요."]
  ][g.turn-1].slice();
  if(g.tx.discharge){p[1]="귀가 이후";p[2]="환자는 귀가했습니다. 이후의 진료는 추적 기록에서 확인합니다.";p[8]="이 진료에서 추가 행동은 할 수 없습니다.";}
- else if(g.tx.surgery){p[1]="응급 수술 계획 시행";p[2]="전문팀이 수술 준비 및 처치를 진행합니다. 추가 평가가 필요하더라도 수술을 미루지 않도록 합니다.";p[8]="수술 결정 시점은 이미 기록되었습니다. 남은 행동은 병행 평가입니다.";}
+ else if(g.tx.surgery){p[1]="응급 수술 계획 시행";p[2]="전문팀이 수술 준비 및 처치를 진행합니다. 추가 평가가 필요하더라도 수술을 미루지 않도록 합니다.";p[8]="수술 결정 시점은 이미 기록되었습니다. 남은 검사는 수술을 지연시키지 않는 병행 평가로 진행됩니다.";}
  else if(g.tx.support){p[2]+="\n\n진통·항구토 처치 후 증상은 일부 완화되지만 원인은 아직 평가 중입니다.";}
  if(g.response)p[2]+="\n\n[최근 처치]\n"+g.response;
  return p;
@@ -219,7 +219,7 @@ function treat(i){
  if(t.key==="surgery"&&!g.tx.consult)return;
  if(t.key==="discharge"&&g.tx.surgery)return;
  g.ap-=2;g.t.add(i);g.tx[t.key]=g.turn;
- if(t.key==="surgery")g.completeAtDecision=hasEvidence()&&!!g.tx.support;
+ if(t.key==="surgery")g.readyAtDecision=g.h.has(0)&&g.h.has(1)&&!!g.tx.support&&(g.x.has(0)||g.x.has(1)||g.x.has(6));
  const responses={
  support:"정맥로를 확보하고 통증 및 구토를 조절합니다. 증상 완화는 원인 해결과는 다릅니다.",
  consult:"산부인과 전문팀에 긴급 평가를 요청했습니다. 병력, 진찰, 영상 소견을 바탕으로 신속한 수술적 평가 필요성을 검토합니다.",
@@ -235,7 +235,7 @@ function treat(i){
 function scoreOutcome(){
  if(g.tx.discharge)return "D";
  if(g.tx.surgery){
-  if(g.tx.consult<=2&&g.tx.surgery<=3)return g.completeAtDecision?"A":"A2";
+  if(g.tx.consult<=2&&g.tx.surgery<=3)return g.readyAtDecision&&hasEvidence()?"A":"A2";
   return "B";
  }
  return "C";
@@ -267,7 +267,7 @@ function submitFinal(){
  if(!g.ended||g.submitted||!(g.outcome==="A"||g.outcome==="A2"))return;
  const guess=$("guess").value;if(!guess){alert("최종 진단을 선택해 주세요.");return;}
  g.submitted=true;const right=guess==="torsion";
- const explanation="최종 진단: 우측 난소 염전(Ovarian torsion).\n\n수술에서 오른쪽 난소와 그 주변 구조가 꼬여 있는 것이 확인되었습니다. 갑작스러운 편측 통증, 반복되는 완화와 재발, 구토, 압통 및 커진 난소가 주요 단서였습니다.\n\n혈류가 일부 관찰돼도 난소 염전을 배제할 수 없습니다. 난소에 혈액을 공급하는 경로가 둘 이상이고 부분적·간헐적 염전이 가능하기 때문입니다. 임신검사는 자궁외임신 등의 감별에 도움이 되며, CBC와 CRP만으로 염전을 배제할 수 없습니다.\n\n의심이 높으면 신속하게 산부인과와 협의하고 복강경으로 확인하며 가능한 한 난소를 보존합니다. 겉보기 색만으로 난소 생존 여부를 단정하지 않습니다.\n\n게임에서는 충분한 진단 근거와 통증 관리, 조기 협진 및 수술 판단을 A등급의 기준으로 삼았습니다. 실제 환자의 난소 보존 여부를 일정한 시간이나 점수로 예측할 수는 없습니다.";
+ const explanation="최종 진단: 우측 난소 염전(Ovarian torsion).\n\n수술에서 오른쪽 난소와 그 주변 구조가 꼬여 있는 것이 확인되었습니다. 갑작스러운 편측 통증, 반복되는 완화와 재발, 구토, 압통 및 커진 난소가 주요 단서였습니다.\n\n혈류가 일부 관찰돼도 난소 염전을 배제할 수 없습니다. 난소에 혈액을 공급하는 경로가 둘 이상이고 부분적·간헐적 염전이 가능하기 때문입니다. 임신검사는 자궁외임신 등의 감별에 도움이 되며, CBC와 CRP만으로 염전을 배제할 수 없습니다.\n\n의심이 높으면 신속하게 산부인과와 협의하고 복강경으로 확인하며 가능한 한 난소를 보존합니다. 겉보기 색만으로 난소 생존 여부를 단정하지 않습니다.\n\n게임에서는 수술 의뢰 전 핵심 병력·진찰·초기 검사 및 증상 관리, 조기 협진·수술 판단, 최종 보고까지 확보한 검사 근거를 A등급의 기준으로 삼았습니다. 병행 평가는 수술을 미루는 의미가 아닙니다. 실제 환자의 난소 보존 여부를 일정한 시간이나 점수로 예측할 수는 없습니다.";
  $("final").textContent="최종 추리: "+(right?"정답":"오답")+"\n\n"+explanation;$("final").classList.remove("hidden");$("submit").disabled=true;$("final").scrollIntoView({behavior:"smooth",block:"start"});
 }
 function deliverPending(final=false){
