@@ -131,8 +131,8 @@ return arriving.length;}
 function next(){if(g.ended)return;if(g.turn===4){if(deliverPending(true)){render();$("journal").scrollIntoView({behavior:"smooth",block:"start"});return;}
 g.ended=true;$("ending").classList.remove("hidden");
 const survival=survivalScores();
-if(!survival.hAlive||!survival.dAlive){
-const key=survival.hAlive?"human":survival.dAlive?"dog":"none";
+if(!survival.hAlive||!survival.dAlive||!fullCaseEvidence()){
+const key=survival.hAlive&&survival.dAlive?"bothIncomplete":survival.hAlive?"human":survival.dAlive?"dog":"none";
 const epilogue=EPILOGUES[key];
 $("endingTitle").textContent="마지막 기록";
 $("endingIntro").textContent="진료가 끝났습니다. 이번 사건은 후일담만 공개됩니다.";
@@ -144,6 +144,7 @@ $("submit").disabled=true;g.guess=true;
 render();$("ending").scrollIntoView({behavior:"smooth",block:"start"});return;}
 g.turn++;g.ap=6;g.count=0;deliverPending();
 log("경과 관찰","새로운 상태 카드가 공개됩니다.");render();}
+function fullCaseEvidence(){return g.firstTurns.x[7]!==undefined&&g.firstTurns.x[7]<=3&&g.firstTurns.d[2]!==undefined&&g.firstTurns.d[2]<=3;}
 function survivalScores(){
 const t=g.firstTurns.t,x=g.firstTurns.x,d=g.firstTurns.d;
 const human=[
@@ -155,9 +156,13 @@ const dog=[
 {ok:d[1]!==undefined&&d[1]<=3,label:"강아지의 신장·간 상태 확인"},
 {ok:d[2]!==undefined&&d[2]<=3,label:"강아지 감염병 전문검사 의뢰"}];
 const hScore=human.filter(o=>o.ok).length,dScore=dog.filter(o=>o.ok).length;
-return {human,dog,hScore,dScore,hAlive:hScore>=2&&human[0].ok&&human[2].ok,dAlive:dScore>=2&&dog[0].ok&&dog[2].ok};
+return {human,dog,hScore,dScore,hAlive:hScore>=2&&human[0].ok,dAlive:dScore>=2&&dog[0].ok};
 }
 const EPILOGUES={
+bothIncomplete:{
+title:"ENDING A2 · 아직 남은 질문",
+body:"몇 주 뒤, 남성과 강아지는 모두 집으로 돌아왔습니다. 두 환자에게 필요한 치료와 관찰은 이어졌지만, 정확한 원인에 대한 검사는 충분히 이루어지지 못했습니다.\n\n남성은 강아지의 목줄을 잡고 천천히 걷습니다. 이번에 무엇이 두 사람을 아프게 했는지에 대한 질문은 아직 남아 있습니다."
+},
 both:{
 title:"ENDING A · 다시 함께 걷는 길",
 body:"몇 주가 흘렀습니다.\n\n병실에서 눈을 뜬 남성은 한동안 자신이 공원에서 쓰러졌다는 사실조차 기억하지 못합니다. 가족은 긴 치료 기간을 이야기해 줍니다.\n\n동물병원에서도 반가운 전화가 옵니다. 신장기능을 추적하며 치료를 이어온 강아지가 조금씩 기운을 되찾았다는 소식입니다.\n\n퇴원 후 첫 산책. 남성은 목줄을 고쳐 쥐고 강아지와 천천히 걸어갑니다. 같은 길을 걷지만, 그날의 산책과는 다른 아침입니다."
@@ -179,7 +184,7 @@ function showEnd(){
 if(!g.ended||g.guess)return;
 const h=$("humanGuess").value,l=$("linkGuess").value;
 if(!h||!l){alert("두 항목을 모두 선택해 주세요.");return;}
-const sc=survivalScores();if(!sc.hAlive||!sc.dAlive)return;
+const sc=survivalScores();if(!sc.hAlive||!sc.dAlive||!fullCaseEvidence())return;
 g.guess=true;
 const rightH=h==="sfts",rightL=l==="distinct";
 const key=sc.hAlive?(sc.dAlive?"both":"human"):(sc.dAlive?"dog":"none");
