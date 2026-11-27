@@ -146,7 +146,7 @@ function next(){if(g.ended)return;if(g.turn===4){g.ended=true;$("ending").classL
 g.turn++;g.ap=4;g.count=0;g.response=null;log("환자 상태 재평가",g.oxygenTurn?"산소치료 시작 후 경과를 확인합니다. 진료 중 소견은 환자 상태 카드에서 확인하십시오.":"추가적인 진단과 치료가 필요합니다. 환자는 여전히 두통과 어지러움을 호소합니다.");render();}
 function end(){if(!g.ended||g.submitted)return;if(!g.oxygenTurn||g.oxygenTurn>2){showUnsuccessfulEpilogue();return;}const guess=$("guess").value,priority=$("priority").value;if(!guess||!priority){alert("두 항목을 선택한 뒤 제출해 주세요.");return;}g.submitted=true;
 const right=guess==="co",rightPriority=priority==="oxygen",early=g.oxygenTurn&&g.oxygenTurn<=2;
-const fullyEvaluated=!!(g.consultTurn&&g.strokeTurn&&g.x.has(9)&&g.h.has(3));
+const fullyEvaluated=!!(g.consultTurn&&g.consultTurn<=3&&g.strokeTurn&&g.strokeTurn<=2&&g.x.has(9)&&g.h.has(3));
 const ep=early&&fullyEvaluated?"ENDING A · 다시 찾은 아침":early?"ENDING B · 위기를 넘긴 후":g.oxygenTurn?"ENDING C · 늦어진 대응":"ENDING D · 숫자 뒤의 경고";
 let body="";
 if(early&&fullyEvaluated)body="고농도 산소 투여와 신속한 재평가, 전문 진료가 이루어졌습니다. 남성은 두통이 서서히 줄어들고 상태가 안정됩니다.\n\n캠핑에 동행한 친구 역시 의료진의 권고에 따라 평가받습니다. 남성은 추적 진료와 지연성 신경학적 증상 안내를 받고 병원을 나섭니다.";
