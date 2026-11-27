@@ -310,7 +310,7 @@ function deliverPending(final=false){
  return arrive.length;
 }
 function next(){
- if(g.ended)return;if(g.turn===4){if(deliverPending(true)){render();return;}finish();return;}
+ if(g.ended)return;if(g.turn===4){if(deliverPending(true)){render();$("reports").scrollIntoView({behavior:"smooth",block:"start"});return;}finish();return;}
  g.turn++;g.ap=4;g.count=0;g.response="";deliverPending();
  log("진료 경과","새로운 진료 상태가 공개되었습니다.");render();
 }
