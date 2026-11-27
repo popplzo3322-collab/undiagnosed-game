@@ -146,10 +146,11 @@ function next(){if(g.ended)return;if(g.turn===4){g.ended=true;$("ending").classL
 g.turn++;g.ap=4;g.count=0;g.response=null;log("환자 상태 재평가",g.oxygenTurn?"산소치료 시작 후 경과를 확인합니다. 진료 중 소견은 환자 상태 카드에서 확인하십시오.":"추가적인 진단과 치료가 필요합니다. 환자는 여전히 두통과 어지러움을 호소합니다.");render();}
 function end(){if(!g.ended||g.submitted)return;if(!g.oxygenTurn||g.oxygenTurn>2){showUnsuccessfulEpilogue();return;}const guess=$("guess").value,priority=$("priority").value;if(!guess||!priority){alert("두 항목을 선택한 뒤 제출해 주세요.");return;}g.submitted=true;
 const right=guess==="co",rightPriority=priority==="oxygen",early=g.oxygenTurn&&g.oxygenTurn<=2;
-const ep=early&&g.consultTurn?"ENDING A · 다시 찾은 아침":early?"ENDING B · 위기를 넘긴 후":g.oxygenTurn?"ENDING C · 늦어진 대응":"ENDING D · 숫자 뒤의 경고";
+const fullyEvaluated=!!(g.consultTurn&&g.strokeTurn&&g.x.has(9)&&g.h.has(3));
+const ep=early&&fullyEvaluated?"ENDING A · 다시 찾은 아침":early?"ENDING B · 위기를 넘긴 후":g.oxygenTurn?"ENDING C · 늦어진 대응":"ENDING D · 숫자 뒤의 경고";
 let body="";
-if(early&&g.consultTurn)body="고농도 산소 투여와 신속한 재평가, 전문 진료가 이루어졌습니다. 남성은 두통이 서서히 줄어들고 상태가 안정됩니다.\n\n캠핑에 동행한 친구 역시 의료진의 권고에 따라 평가받습니다. 남성은 추적 진료와 지연성 신경학적 증상 안내를 받고 병원을 나섭니다.";
-else if(early)body="고농도 산소를 일찍 투여한 뒤 환자의 상태가 점차 나아집니다. 그러나 의식 변화가 있었던 환자이므로 중증도 평가 및 전문가 상담을 포함한 추가적인 관찰이 필요합니다.\n\n검사 수치가 낮아졌다고 모든 위험이 끝난 것은 아닙니다.";
+if(early&&fullyEvaluated)body="고농도 산소 투여와 신속한 재평가, 전문 진료가 이루어졌습니다. 남성은 두통이 서서히 줄어들고 상태가 안정됩니다.\n\n캠핑에 동행한 친구 역시 의료진의 권고에 따라 평가받습니다. 남성은 추적 진료와 지연성 신경학적 증상 안내를 받고 병원을 나섭니다.";
+else if(early)body="고농도 산소를 일찍 투여한 뒤 환자의 상태가 점차 나아집니다. 하지만 노출력 확인, 혈액검사 및 신경학적 평가 중 일부가 충분하지 않아 원인과 동반 위험의 평가를 마치지 못했습니다.\n\n검사 수치가 낮아졌다고 모든 위험이 끝난 것은 아닙니다.";
 else if(g.oxygenTurn)body="환자는 한동안 혼돈과 심한 두통을 겪은 뒤에야 적절한 산소치료를 받기 시작했습니다. 치료는 이어지지만 상태가 나빴던 시간에 대한 평가와 집중 관찰이 필요합니다.\n\n이후에도 회복 여부와 신경학적 경과를 지켜봐야 합니다.";
 else body="정상처럼 보인 산소포화도 수치에 안심한 사이 환자의 두통과 혼돈은 계속됩니다. 뒤늦게 노출 가능성을 재평가하는 추가 의료진이 환자에게 필요한 치료를 시작합니다.\n\n이번 진료에서 놓친 것은 수치가 아니라 환자의 증상과 환경 노출을 연결하는 판단이었습니다.";
 let text="최종 진단: "+(right?"정답":"오답")+"\n필수 초기 대응: "+(rightPriority?"정답":"오답")+"\n뇌졸중 응급평가: "+(g.strokeTurn?"신속평가 시행 ("+g.strokeTurn+"턴)":"미선택")+"\n\n"+ep+"\n\n"+body+
