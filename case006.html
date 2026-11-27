@@ -5,21 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>미확진 | CASE 006 맥박은 잡힙니다</title>
 <link rel="stylesheet" href="./shared-ui.css?v=3">
+<link rel="stylesheet" href="./case-prologue.css">
 <style>
 :root{font-family:system-ui,-apple-system,'Pretendard','Noto Sans KR',sans-serif;background:#0b1119;color:#eaf3fc}
 *{box-sizing:border-box}body{margin:0}button,textarea,select{font:inherit}button{cursor:pointer}
 button:disabled{opacity:.4;cursor:not-allowed}a{color:#96d6ea}.hidden{display:none!important}
-.cover{position:fixed;z-index:1000;inset:0;overflow:auto;padding:23px 16px 65px;background:radial-gradient(ellipse at 20% 0%,#244558,#0b1119 62%)}
-.cover-inner{max-width:760px;margin:22px auto}.cover-kicker{font-size:12px;color:#83d5e6;font-weight:850;letter-spacing:.14em}
-.cover h1{font-size:clamp(28px,5vw,46px);letter-spacing:-.05em;line-height:1.25;margin:10px 0 16px}
-.cover-lead{font-size:15px;line-height:1.95;color:#c4d9e6}
-.cover-paper{padding:clamp(20px,4.5vw,35px);border-radius:17px;background:#142739;border:1px solid #3b576d;margin-top:20px;box-shadow:0 14px 46px #0004}
-.cover-paper h2{font-size:18px;margin:0 0 13px}.cover-paper p{font-size:14px;line-height:1.85;color:#cbdce8}
-.cover-paper blockquote{font-size:15px;line-height:2;white-space:pre-wrap;background:#1b3847;border-left:3px solid #7bc8d4;border-radius:0 10px 10px 0;padding:15px 17px;margin:15px 0 20px}
-.cover-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:20px}
-.cover-note{color:#9db7c8;font-size:12px;line-height:1.8}
-.cover-btn,.ug-shell .case-btn{display:inline-flex;align-items:center;justify-content:center;background:#1d516b;color:#eef7ff;border:1px solid #4a94ae;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:800}
-.cover-btn:hover,.ug-shell .case-btn:hover{background:#296e88}
 .ug-shell #speech{font-size:14px;line-height:1.9;white-space:pre-wrap}
 .ug-shell #actions .ug-action{display:flex;width:100%;justify-content:space-between;align-items:center;text-align:left;gap:12px;border-radius:10px;border:1px solid #3d546a;background:#1b3042;color:#eaf3fc;padding:12px;min-height:58px;font-size:13px}
 .ug-shell #actions .ug-action:hover:not(:disabled){border-color:#7abfd0;background:#24485b}
@@ -53,21 +43,23 @@ button:disabled{opacity:.4;cursor:not-allowed}a{color:#96d6ea}.hidden{display:no
 .lab-table td{border-bottom:1px solid #dce5eb;padding:10px 15px}
 .lab-table .abnormal{color:#b33528;font-weight:800}
 .modal-note{padding:16px 20px;font-size:12px;line-height:1.8;color:#465e70;white-space:pre-wrap}
-@media(max-width:540px){.modal-meta{grid-template-columns:1fr}.lab-table th,.lab-table td{padding:9px 7px;font-size:11px}.cover-foot .cover-btn{width:100%}}
+@media(max-width:540px){.modal-meta{grid-template-columns:1fr}.lab-table th,.lab-table td{padding:9px 7px;font-size:11px}}
 </style>
 </head>
 <body>
 <section class="cover" id="intro" aria-label="CASE 006 프롤로그">
  <div class="cover-inner">
-  <div class="cover-kicker">UNDIAGNOSED · 미확진 · CASE 006</div>
+  <small class="cover-kicker">UNDIAGNOSED · 미확진 / CASE 006</small>
   <h1>맥박은 잡힙니다</h1>
-  <div class="cover-lead">왼쪽 경골 골절 환자. 골절 정복과 부목 고정 뒤 줄어들었던 종아리 통증이 한 시간 만에 다시 심해집니다.</div>
-  <div class="cover-paper">
-   <h2>응급실 · 28세 남성</h2>
-   <p>전동킥보드 사고로 다친 환자가 다시 호출벨을 누릅니다. 왼발은 따뜻하고 발등 맥박은 잡힙니다.</p>
-   <blockquote>“선생님, 처음 다쳤을 때보다 지금이 더 아파요. 종아리 안쪽이 터질 것 같아요.”</blockquote>
-   <p><b>초기 기록</b> · 체온 36.8°C · 혈압 124/72 mmHg · 심박수 102회/분 · 호흡수 20회/분 · SpO₂ 99%</p>
-   <div class="cover-foot"><a class="cover-btn" href="./?cases">전체 사건 목록</a><button type="button" class="cover-btn" id="start">진료 시작 →</button></div>
+  <p>한도윤 님, 28세 남성. 전동킥보드 사고로 왼쪽 경골이 부러졌습니다. 응급실에서 골절을 정복하고 부목을 댄 뒤 통증이 잠잠해졌지만, 한 시간쯤 지나 그가 다시 호출벨을 눌렀습니다.</p>
+  <div class="cover-speaker">한도윤 님</div>
+  <blockquote>“아까 뼈 맞추고 나서는 좀 살 것 같았어요. 그런데 지금은 처음 다쳤을 때보다 더 아파요. 가만히 있어도 종아리 안쪽이 터질 것 같아요.”</blockquote>
+  <div class="cover-speaker">응급실 간호사</div>
+  <blockquote>“처치가 끝났을 때는 한동안 눈을 붙이고 있었어요. 조금 전에 다시 불러서 가 봤는데, 다리를 만지기도 전에 아프다고 하더군요. 왼발은 따뜻하고 발등 맥박도 잡힙니다.”</blockquote>
+  <p><b>초진 기록</b> · 체온 36.8°C · 혈압 124/72 mmHg · 심박수 102회/분 · 호흡수 20회/분 · SpO₂ 99%</p>
+  <div class="cover-foot">
+   <a class="cover-btn" href="./?cases">전체 사건 목록</a>
+   <button type="button" class="cover-btn" id="start">진료 시작 →</button>
   </div>
  </div>
 </section>
