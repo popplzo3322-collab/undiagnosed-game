@@ -144,7 +144,7 @@ $("submit").disabled=true;g.guess=true;
 render();$("ending").scrollIntoView({behavior:"smooth",block:"start"});return;}
 g.turn++;g.ap=6;g.count=0;deliverPending();
 log("경과 관찰","새로운 상태 카드가 공개됩니다.");render();}
-function fullCaseEvidence(){const assessment=survivalScores();return assessment.hScore===3&&assessment.dScore===3;}
+function fullCaseEvidence(){const assessment=survivalScores();return assessment.hScore===3&&assessment.dScore===3&&g.h.has(3);}
 function survivalScores(){
 const t=g.firstTurns.t,x=g.firstTurns.x,d=g.firstTurns.d;
 const human=[
@@ -161,7 +161,7 @@ return {human,dog,hScore,dScore,hAlive:hScore>=2&&human[0].ok,dAlive:dScore>=2&&
 const EPILOGUES={
 bothIncomplete:{
 title:"ENDING A2 · 아직 남은 질문",
-body:"몇 주 뒤, 남성과 강아지는 모두 집으로 돌아왔습니다. 두 환자에게 필요한 치료와 관찰은 이어졌지만, 정확한 원인에 대한 검사는 충분히 이루어지지 못했습니다.\n\n남성은 강아지의 목줄을 잡고 천천히 걷습니다. 이번에 무엇이 두 사람을 아프게 했는지에 대한 질문은 아직 남아 있습니다."
+body:"몇 주 뒤, 남성과 강아지는 모두 집으로 돌아왔습니다. 두 환자에게 필요한 치료와 관찰은 이어졌지만, 병력과 검사 단서가 충분히 연결되지 않아 사건의 원인을 명확하게 설명하지 못했습니다.\n\n남성은 강아지의 목줄을 잡고 천천히 걷습니다. 이번에 무엇이 두 사람을 아프게 했는지에 대한 질문은 아직 남아 있습니다."
 },
 both:{
 title:"ENDING A · 다시 함께 걷는 길",
